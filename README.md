@@ -1,6 +1,6 @@
 # BidOut Auction React (WORK IN PROGRESS)
 
-![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/react-logo.png?raw=true)
+![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/logo.jpg?raw=true)
 
 
 #### React Docs: [Documentation](https://legacy.reactjs.org/docs/getting-started.html)
