@@ -13,10 +13,23 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import Logo from '../assets/header-logo.png';
 
-export const Header = () => {
+const Header = () => {
   const navigate = useNavigate();
   const [isSmallerThan992] = useMediaQuery("(max-width: 991px)")
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const buttonStyles = {
+    fontSize: 14,
+    color: "black",
+    colorScheme: "none",
+    mr: 5,
+  }
+
+  const buttonStyles2 = {
+    ...buttonStyles,
+    display: "block",
+    mb: 2
+  }
 
   return (
     <>
@@ -26,12 +39,12 @@ export const Header = () => {
           {!isSmallerThan992 && (
             <>
               <Spacer />
-              <Button fontSize={14} color="black" colorScheme="none" mr={5}>Home</Button>
-              <Button fontSize={14} color="black" colorScheme="none" mr={5}>Active Listings</Button>
-              <Button fontSize={14} color="black" colorScheme="none" mr={5}>Login</Button>
-              <Button fontSize={14} color="black" colorScheme="none" mr={5}>Sign Up</Button>
-              <Button fontSize={14} color="black" colorScheme="none" mr={5}>Watch List</Button>
-              <Button fontSize={14} color="black" colorScheme="none" mr={5}>Create Listing</Button>
+              <Button {...buttonStyles}>Home</Button>
+              <Button {...buttonStyles}>Active Listings</Button>
+              <Button {...buttonStyles}>Login</Button>
+              <Button {...buttonStyles}>Sign Up</Button>
+              <Button {...buttonStyles}>Watch List</Button>
+              <Button {...buttonStyles}>Create Listing</Button>
               <Spacer />
               <Button float='right' _hover={{ bg: 'red.600' }} backgroundColor="rgb(220, 53, 69)" color='white' onClick={() => console.log("dashboard")}>My Dashboard</Button>
             </>
@@ -49,13 +62,13 @@ export const Header = () => {
       </Box>
       {isSmallerThan992 && (
         <Slide backgroundColor="rgb(248, 249, 250)" direction="top" in={isMenuOpen} unmountOnExit={true} style={{ width: "100%", height: "100vh" }}>
-          <Box float='left' display="block" pos="absolute" top="60px" left="0" right="0" backgroundColor="rgb(248, 249, 250)" p={2}>
-            <Button fontSize={14} color="black" colorScheme="none" mr={2} mb={2} w="100%">Home</Button>
-            <Button fontSize={14} color="black" colorScheme="none" mr={2} mb={2} w="100%">Active Listings</Button>
-            <Button fontSize={14} color="black" colorScheme="none" mr={2} mb={2} w="100%">Login</Button>
-            <Button fontSize={14} color="black" colorScheme="none" mr={2} mb={2} w="100%">Sign Up</Button>
-            <Button fontSize={14} color="black" colorScheme="none" mr={2} mb={2} w="100%">Watch List</Button>
-            <Button fontSize={14} color="black" colorScheme="none" mr={2} mb={2} w="100%">Create Listing</Button>
+          <Box textAlign='left' pos="absolute" top="60px" left="0" right="0" backgroundColor="rgb(248, 249, 250)" p={2}>
+            <Button {...buttonStyles2}>Home</Button>
+            <Button {...buttonStyles2}>Active Listings</Button>
+            <Button {...buttonStyles2}>Login</Button>
+            <Button {...buttonStyles2}>Sign Up</Button>
+            <Button {...buttonStyles2}>Watch List</Button>
+            <Button {...buttonStyles2}>Create Listing</Button>
 
             <Button mt={2} backgroundColor="rgb(220, 53, 69)" _hover={{ bg: 'red.600' }} color='white' onClick={() => console.log("dashboard")}>My Dashboard</Button>
           </Box>
@@ -64,3 +77,5 @@ export const Header = () => {
     </>
   )
 }
+
+export default Header;
