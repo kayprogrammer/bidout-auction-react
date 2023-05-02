@@ -6,8 +6,8 @@ import {
   Spacer,
   Button,
   Image,
-  useMediaQuery,
-  Slide
+  useBreakpointValue,
+  Slide,
 } from '@chakra-ui/react';
 
 import { HamburgerIcon } from '@chakra-ui/icons';
@@ -15,7 +15,7 @@ import Logo from '../assets/header-logo.png';
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isSmallerThan992] = useMediaQuery("(max-width: 991px)")
+  const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const buttonStyles = {
@@ -36,7 +36,7 @@ const Header = () => {
       <Box backgroundColor="rgb(248, 249, 250)" px={4} py={3} position="fixed" top="0" left="0" right="0" zIndex="10">
         <Image src={Logo} float='left' alt='Logo' role='button' onClick={() => navigate('/')} />
         <Flex mx="auto">
-          {!isSmallerThan992 && (
+          {isLargeScreen && (
             <>
               <Spacer />
               <Button {...buttonStyles}>Home</Button>
@@ -50,7 +50,7 @@ const Header = () => {
             </>
 
           )}
-          {isSmallerThan992 && (
+          {!isLargeScreen && (
             <>
               <Spacer />
               <Button onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -60,9 +60,9 @@ const Header = () => {
           )}
         </Flex>
       </Box>
-      {isSmallerThan992 && (
+      {!isLargeScreen && (
         <Slide backgroundColor="rgb(248, 249, 250)" direction="top" in={isMenuOpen} unmountOnExit={true} style={{ width: "100%", height: "100vh" }}>
-          <Box textAlign='left' pos="absolute" top="60px" left="0" right="0" backgroundColor="rgb(248, 249, 250)" p={2}>
+          <Box pos="absolute" top="60px" left="0" right="0" backgroundColor="rgb(248, 249, 250)" p={2}>
             <Button {...buttonStyles2}>Home</Button>
             <Button {...buttonStyles2}>Active Listings</Button>
             <Button {...buttonStyles2}>Login</Button>
