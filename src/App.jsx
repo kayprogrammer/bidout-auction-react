@@ -11,6 +11,7 @@ import Footer from "./components/Footer"
 import { HomePage } from './pages';
 
 const App = () => {
+  document.title = "Kay's Auction House"
     return (
     <ChakraProvider>
       <Box className='app'>
