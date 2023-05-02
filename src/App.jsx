@@ -12,7 +12,7 @@ import { HomePage } from './pages';
 
 const App = () => {
   document.title = "Kay's Auction House"
-    return (
+  return (
     <ChakraProvider>
       <Box className='app'>
         <Header />
