@@ -61,7 +61,7 @@ const Header = () => {
         </Flex>
       </Box>
       {!isLargeScreen && (
-        <Slide backgroundColor="rgb(248, 249, 250)" direction="top" in={isMenuOpen} unmountOnExit={true} style={{ width: "100%", height: "100vh" }}>
+        <Slide backgroundColor="rgb(248, 249, 250)" direction="top" in={isMenuOpen} unmountOnExit={true} style={{ width: "100%", height: "100vh", zIndex: 1 }}>
           <Box pos="absolute" top="60px" left="0" right="0" backgroundColor="rgb(248, 249, 250)" p={2}>
             <Button {...buttonStyles2}>Home</Button>
             <Button {...buttonStyles2}>Active Listings</Button>
