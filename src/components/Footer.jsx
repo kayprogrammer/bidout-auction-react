@@ -22,7 +22,7 @@ const Footer = () => {
         fontSize: "22px",
         size: 'lg',
         color: "white",
-        marginBottom: "15px"
+        mb: "15px"
     }
 
     const link_styles = {
@@ -32,15 +32,15 @@ const Footer = () => {
     }
 
     return (
-        <Box position='fixed' bottom='0' width='100%' backgroundColor='black' padding='35px'>
+        <Box bottom='0' width='100%' backgroundColor='black' padding='35px'>
             <Grid templateColumns={[`repeat(${numDetailCols}, 1fr)`]} gap={6} padding='60px'>
-                <GridItem w='100%' marginBottom={isLargeScreen ? '0' : '20px'}>
+                <GridItem w='100%' mb={isLargeScreen ? '0' : '20px'}>
                     <Heading {...heading_styles}>Join Newsletter</Heading>
                     <ul>
                         <li style={{ color: 'white', maxWidth: '90%', marginBottom: '20px' }}>Subscribe our newsletter to get more free design course and resource.</li>
                         <li style={{ marginBottom: "25px" }}>
                             <form>
-                                <Input type='email' placeholder='your email' marginBottom='10px' backgroundColor='white' />
+                                <Input type='email' placeholder='your email' mb='10px' backgroundColor='white' />
                                 <br />
                                 <Button type='submit' backgroundColor='rgb(220, 53, 69)' color='white'>Submit</Button>
                             </form>
