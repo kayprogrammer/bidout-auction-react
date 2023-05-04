@@ -1,5 +1,4 @@
 import React from 'react';
-// import { useNavigate } from 'react-router-dom';
 import {
   Heading,
   Text,
@@ -16,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 import BoredApe from '../assets/boredape.jpg'
 import kay from '../assets/kay.png'
+import quoteImg from '../assets/quote-red.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,7 +28,9 @@ const HomePage = () => {
     color: 'white',
     _hover: { bg: 'red.600' }
   }
-  const elements = [1, 2, 3, 4, 5, 6]
+  const itemElements = [1, 2, 3, 4, 5, 6]
+  const reviewElements = [1, 2, 3]
+
   return (
     <Box padding={{ md: '70px', sm: '70px', base: "30px" }} minHeight='28.7vh'>
       <Grid templateColumns={[`repeat(${firstDisplayCols}, 1fr)`]} gap={6}>
@@ -52,7 +54,7 @@ const HomePage = () => {
         </GridItem>
       </Grid>
       <Grid mt={12} templateColumns={[`repeat(${itemsDisplayCols}, 1fr)`]} gap={8} alignItems='center'>
-        {elements.map((el) => (
+        {itemElements.map((el) => (
           <Card width='100%'>
             <CardBody>
               <Box role='button' className='card-img' _hover={{ transform: 'scale(1.05)' }} transitionProperty='all'>
@@ -95,6 +97,24 @@ const HomePage = () => {
         ))}
 
 
+      </Grid>
+      <Box mt='100px' textAlign='center' w='100%'>
+        <Heading>What Clients Say</Heading>
+        <Text display='table' m='0 auto' maxW={{ lg: '55%' }}>Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</Text>
+      </Box>
+      <Grid mt='60px' templateColumns={[`repeat(${itemsDisplayCols}, 1fr)`]} gap={5}>
+        {reviewElements.map((el) => (
+          <Card>
+            <CardBody>
+              <Flex mb={5}>
+                <Image src={kay} alt='avatar' borderRadius='full' boxSize='60px' objectFit='cover' />
+                <Image src={quoteImg} style={{ marginLeft: 'auto', color: 'grey' }} />
+              </Flex>
+              <Heading size='md' mb={3}>Johan Martin R</Heading>
+              <Text>Maecenas vitae porttitor neque, ac porttitor nunc. Duis venenatis lacinia libero. Nam nec augue ut nunc vulputate tincidunt at suscipit nunc.</Text>
+            </CardBody>
+          </Card>
+        ))}
       </Grid>
     </Box>
   )
