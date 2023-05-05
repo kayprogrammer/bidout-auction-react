@@ -5,23 +5,21 @@ import {
   Box,
 } from '@chakra-ui/react';
 import './App.css'
-import Header from "./components/Header"
-import Footer from "./components/Footer"
-
-import { HomePage } from './pages';
+import { Header, Footer } from './components'
+import { HomePage, ActiveListings } from './pages';
 
 const App = () => {
   document.title = "Kay's Auction House"
   return (
     <ChakraProvider>
-      <Box className='app'>
+      <Box className='app' w='100%'>
         <Header />
         <div className='main'>
           <Routes>
             <Route exact path="/" element={<HomePage />} />
+            <Route path="/listings" element={<ActiveListings />} />
           </Routes>
         </div>
-
         <Footer />
       </Box>
     </ChakraProvider>
