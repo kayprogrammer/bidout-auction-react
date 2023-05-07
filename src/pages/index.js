@@ -1,2 +1,4 @@
-export { default as HomePage } from './HomePage';
+export { default as Home } from './Home';
 export { default as ActiveListings } from './ActiveListings';
+export { default as SignUp } from './SignUp';
+export { default as Login } from './Login';

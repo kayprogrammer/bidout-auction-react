@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import './App.css'
 import { Header, Footer } from './components'
-import { HomePage, ActiveListings } from './pages';
+import { Home, ActiveListings, SignUp, Login } from './pages';
 
 const App = () => {
   document.title = "Kay's Auction House"
@@ -16,8 +16,10 @@ const App = () => {
         <Header />
         <div className='main'>
           <Routes>
-            <Route exact path="/" element={<HomePage />} />
+            <Route exact path="/" element={<Home />} />
             <Route path="/listings" element={<ActiveListings />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </div>
         <Footer />

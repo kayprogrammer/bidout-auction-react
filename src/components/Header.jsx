@@ -41,8 +41,8 @@ const Header = () => {
               <Spacer />
               <Link to='/' style={linkStyles}>Home</Link>
               <Link to='/listings' style={linkStyles}>Active Listings</Link>
-              <Link style={linkStyles}>Login</Link>
-              <Link style={linkStyles}>Sign Up</Link>
+              <Link to='/login' style={linkStyles}>Login</Link>
+              <Link to='/signup' style={linkStyles}>Sign Up</Link>
               <Link style={linkStyles}>Watch List</Link>
               <Link style={linkStyles}>Create Listing</Link>
               <Spacer />

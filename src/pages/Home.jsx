@@ -17,7 +17,7 @@ import kay from '../assets/kay.png'
 import quoteImg from '../assets/quote-red.svg'
 import { CardListing } from '../components';
 
-const HomePage = () => {
+const Home = () => {
   const firstDisplayCols = useBreakpointValue({ base: 1, md: 1, lg: 2 })
   const itemsDisplayCols = useBreakpointValue({ base: 1, md: 2, lg: 3 })
 
@@ -80,4 +80,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default Home
