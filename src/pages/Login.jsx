@@ -7,7 +7,7 @@ const Login = () => {
     return (
         <>
             <SubHeader name='Login' />
-            <Box minHeight='28.7vh' padding='30'>
+            <Box minHeight='28.7vh' p='30'>
                 <Card maxW='100%' width='570px' display='table' m='0 auto' boxShadow='lg'>
                     <CardBody>
                         <Heading size='xl' textAlign='center'>Sign Up</Heading>

@@ -16,6 +16,7 @@ import BoredApe from '../assets/boredape.jpg'
 import kay from '../assets/kay.png'
 import quoteImg from '../assets/quote-red.svg'
 import { CardListing } from '../components';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const firstDisplayCols = useBreakpointValue({ base: 1, md: 1, lg: 2 })
@@ -36,7 +37,7 @@ const Home = () => {
           <Heading fontSize={15} color='rgb(220, 53, 69)' fontWeight='bold' mb={6}>Welcome to the Auction House</Heading>
           <Heading fontSize={58} mb={4}>Build, sell & collect digital items.</Heading>
           <Text mb={12} fontSize={13}>Nulla facilisi. Maecenas tellus ut ligula interdum convallis. Nullam dapibus on erat in dolor posuere, none hendrerit lectus ornare. Suspendisse sit amet turpina sagittis, ultrices dui et, aliquam urna. </Text>
-          <Button size='lg' {...buttonStyles}>Start Exploring</Button>
+          <Button size='lg' {...buttonStyles}><Link to='/listings'>Start Exploring</Link></Button>
         </GridItem>
         <GridItem>
           <Image ml={{ lg: 'auto' }} maxWidth='85%' src={BoredApe} alt='BoredApe' mb='3.5' />
@@ -48,7 +49,7 @@ const Home = () => {
           <Text fontSize={15}>Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</Text>
         </GridItem>
         <GridItem>
-          <Button width='150px' {...buttonStyles} float={{ lg: "right" }}>View All</Button>
+          <Button width='150px' {...buttonStyles} float={{ lg: "right" }}><Link to='/listings'>View All</Link></Button>
         </GridItem>
       </Grid>
       <Grid mt={12} templateColumns={[`repeat(${itemsDisplayCols}, 1fr)`]} gap={8} alignItems='center'>
