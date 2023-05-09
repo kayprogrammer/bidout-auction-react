@@ -2,10 +2,10 @@ import { Box, Button, Card, CloseButton, Heading, Slide, ModalOverlay, Modal } f
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
-const SubHeader = ({ name }) => {
+const SubHeader = ({ name, backgroundColor }) => {
   const current_path = window.location.pathname
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
-
+  const bgColor = backgroundColor ? backgroundColor : 'rgb(220, 53, 69)'
   const categoryButtonStyles = {
     w: '100%',
     size: 'lg',
@@ -20,7 +20,7 @@ const SubHeader = ({ name }) => {
   const categoryElements = [1, 2, 3, 4, 5]
   return (
     <>
-      <Box display={{ sm: 'block', md: 'flex' }} bgColor='rgb(220, 53, 69)' alignItems='center' p={{ base: '30px 30px 30px 30px', md: '58px 100px 50px 100px' }}>
+      <Box display={{ sm: 'block', md: 'flex' }} bgColor={bgColor} alignItems='center' p={{ base: '30px 30px 30px 30px', md: '58px 100px 50px 100px' }}>
         <Heading size='2xl' color='white'>{name}</Heading>
         {(current_path === '/listings' || current_path === '/listings/') && (
           <Button mt={{ base: 5 }} colorScheme='blue' ml='auto' onClick={() => setIsSideMenuOpen(true)}>Categories</Button>

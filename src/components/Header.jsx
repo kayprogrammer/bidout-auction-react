@@ -46,7 +46,7 @@ const Header = () => {
               <Link style={linkStyles}>Watch List</Link>
               <Link to='/create-listing' style={linkStyles}>Create Listing</Link>
               <Spacer />
-              <Button float='right' _hover={{ bg: 'red.600' }} backgroundColor="rgb(220, 53, 69)" color='white' onClick={() => console.log("dashboard")}>My Dashboard</Button>
+              <Button float='right' _hover={{ bg: 'red.600' }} backgroundColor="rgb(220, 53, 69)" color='white' onClick={() => navigate('/dashboard')}>My Dashboard</Button>
             </>
 
           )}

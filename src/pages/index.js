@@ -7,4 +7,6 @@ export { default as PasswordResetRequest } from './PasswordResetRequest';
 export { default as PasswordReset } from './PasswordReset';
 export { default as CreateListing } from './CreateListing';
 export { default as ListingDetails } from './ListingDetails';
+export { default as UserDashboard } from './UserDashboard';
+
 
