@@ -14,8 +14,10 @@ import {
 import kay from '../assets/kay.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const CardListing = () => {
+  const navigate = useNavigate();
   const buttonStyles = {
     bgColor: 'rgb(220, 53, 69)',
     color: 'white',
@@ -24,7 +26,7 @@ const CardListing = () => {
   return (
     <Card width='100%'>
       <CardBody>
-        <Box role='button' className='card-img' _hover={{ transform: 'scale(1.05)' }} transitionProperty='all'>
+        <Box role='button' className='card-img' _hover={{ transform: 'scale(1.05)' }} transitionProperty='all' onClick={() => navigate('/listings/id/')}>
           <Image
             maxW='90%'
             mx='auto'
