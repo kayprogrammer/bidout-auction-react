@@ -43,7 +43,7 @@ const Header = () => {
               <Link to='/listings' style={linkStyles}>Active Listings</Link>
               <Link to='/login' style={linkStyles}>Login</Link>
               <Link to='/signup' style={linkStyles}>Sign Up</Link>
-              <Link style={linkStyles}>Watch List</Link>
+              <Link to='/watchlist' style={linkStyles}>Watch List</Link>
               <Link to='/create-listing' style={linkStyles}>Create Listing</Link>
               <Spacer />
               <Button float='right' _hover={{ bg: 'red.600' }} backgroundColor="rgb(220, 53, 69)" color='white' onClick={() => navigate('/dashboard')}>My Dashboard</Button>
@@ -65,10 +65,10 @@ const Header = () => {
           <Box pos="absolute" top="60px" left="0" right="0" backgroundColor="rgb(248, 249, 250)" p='1em 2.5em 2.5em 2.5em'>
             <Link to='/' style={linkStyles2}>Home</Link>
             <Link to='/listings' style={linkStyles2}>Active Listings</Link>
-            <Link style={linkStyles2}>Login</Link>
-            <Link style={linkStyles2}>Sign Up</Link>
-            <Link style={linkStyles2}>Watch List</Link>
-            <Link style={linkStyles2}>Create Listing</Link>
+            <Link to='/login' style={linkStyles2}>Login</Link>
+            <Link to='/signup' style={linkStyles2}>Sign Up</Link>
+            <Link to='/watchlist' style={linkStyles2}>Watch List</Link>
+            <Link to='/create-listing' style={linkStyles2}>Create Listing</Link>
 
             <Button mt={2} backgroundColor="rgb(220, 53, 69)" _hover={{ bg: 'red.600' }} color='white' onClick={() => console.log("dashboard")}>My Dashboard</Button>
           </Box>

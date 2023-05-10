@@ -3,6 +3,8 @@ import { SubHeader } from '../components'
 import { Box, Button, Card, Grid, GridItem, Image, Input, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from '@chakra-ui/react'
 import kay from '../assets/kay.png'
 import { useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
 const UserDashboard = () => {
     const [currentTab, setCurrentTab] = useState('dashboard')
@@ -11,7 +13,7 @@ const UserDashboard = () => {
     const profileDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 2, lg: 2 })
 
     const navigate = useNavigate();
-    
+
     return (
         <>
             <SubHeader name='Dashboard' backgroundColor='rgb(13, 110, 253)' />
@@ -47,10 +49,10 @@ const UserDashboard = () => {
                                             <Tr>
                                                 <Td>1</Td>
                                                 <Td>Brand New royal Enfield 250 CC For special Sale</Td>
-                                                <Td>1000</Td>
+                                                <Td>$1000</Td>
                                                 <Td>Active</Td>
                                                 <Td>1</Td>
-                                                <Td>icon</Td>
+                                                <Td role='button' onClick={() => navigate(`/dashboard/listings/${el}/update`)}><FontAwesomeIcon icon={faEdit}/></Td>
                                             </Tr>
                                         ))}
                                     </Tbody>
