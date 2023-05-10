@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { SubHeader } from '../components'
 import { Box, Button, Card, Grid, GridItem, Image, Input, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from '@chakra-ui/react'
 import kay from '../assets/kay.png'
+import { useNavigate } from 'react-router-dom'
 
 const UserDashboard = () => {
     const [currentTab, setCurrentTab] = useState('dashboard')
@@ -9,6 +10,8 @@ const UserDashboard = () => {
     const tabDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 4, lg: 4 })
     const profileDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 2, lg: 2 })
 
+    const navigate = useNavigate();
+    
     return (
         <>
             <SubHeader name='Dashboard' backgroundColor='rgb(13, 110, 253)' />
@@ -52,7 +55,7 @@ const UserDashboard = () => {
                                         ))}
                                     </Tbody>
                                 </Table>
-                                <Text fontWeight='bold' fontSize='sm' color='blue' role='button' mt={4} textAlign='center'>All listings!</Text>
+                                <Text fontWeight='bold' fontSize='sm' color='blue' role='button' mt={4} textAlign='center' onClick={() => navigate('/dashboard/listings')}>All listings!</Text>
                             </>
                         ) : (
                             <>

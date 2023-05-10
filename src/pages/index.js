@@ -8,5 +8,8 @@ export { default as PasswordReset } from './PasswordReset';
 export { default as CreateListing } from './CreateListing';
 export { default as ListingDetails } from './ListingDetails';
 export { default as UserDashboard } from './UserDashboard';
+export { default as AllUserListings } from './AllUserListings';
+export { default as ListingBids } from './ListingBids';
+
 
 
