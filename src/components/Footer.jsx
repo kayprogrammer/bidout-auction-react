@@ -1,4 +1,4 @@
-import { Box, Image, Heading, Input, Button, Grid, GridItem, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Image, Heading, Input, Button, Grid, GridItem, useBreakpointValue, Text } from '@chakra-ui/react'
 import React from 'react'
 import Logo from '../assets/footer-logo.png';
 import FooterPay1 from '../assets/footer-pay1.png';
@@ -14,6 +14,7 @@ import { faTwitter, faFacebookF, faWhatsapp, faInstagram } from '@fortawesome/fr
 const Footer = () => {
     const numDetailCols = useBreakpointValue({ base: 1, md: 2, lg: 4 });
     const numCopyrightCols = useBreakpointValue({ base: 1, md: 2, lg: 2 });
+    const payDisplayCols = useBreakpointValue({ base: 3, md: 5, lg: 5 });
 
 
     const heading_styles = {
@@ -32,7 +33,7 @@ const Footer = () => {
     return (
         <Box bottom='0' width='100%' backgroundColor='black' padding='35px'>
             <Grid templateColumns={[`repeat(${numDetailCols}, 1fr)`]} gap={6} padding='60px'>
-                <GridItem w='100%' mb={{ lg: '0', md: '20px', sm: '20px'}}>
+                <GridItem w='100%' mb={{ lg: '0', md: '20px', sm: '20px' }}>
                     <Heading {...heading_styles}>Join Newsletter</Heading>
                     <ul>
                         <li style={{ color: 'white', maxWidth: '90%', marginBottom: '20px' }}>Subscribe our newsletter to get more free design course and resource.</li>
@@ -85,14 +86,14 @@ const Footer = () => {
             <Grid templateColumns={[`repeat(${numCopyrightCols}, 1fr)`]} padding='20px 20px 0 20px' alignItems='center'>
                 <GridItem color='white'>Copyright: Kay's Auction House ©{new Date().getFullYear()}</GridItem>
                 <GridItem color="white" marginLeft={{ md: 'auto' }} marginTop={{ sm: '13px' }}>
-                    <p>We accept: </p>
-                    <Box display='flex'>
-                        <Image marginRight='4' src={FooterPay1} alt='Logo' />
-                        <Image marginRight='4' src={FooterPay2} alt='Logo' />
-                        <Image marginRight='4' src={FooterPay3} alt='Logo' />
-                        <Image marginRight='4' src={FooterPay4} alt='Logo' />
-                        <Image marginRight='4' src={FooterPay5} alt='Logo' />
-                    </Box>
+                    <Text mb={2} mt={{ base: 4, md: 0 }}>We accept: </Text>
+                    <Grid gap={4} templateColumns={[`repeat(${payDisplayCols}, 1fr)`]}>
+                        <Image src={FooterPay1} alt='Logo' />
+                        <Image src={FooterPay2} alt='Logo' />
+                        <Image src={FooterPay3} alt='Logo' />
+                        <Image src={FooterPay4} alt='Logo' />
+                        <Image src={FooterPay5} alt='Logo' />
+                    </Grid>
                 </GridItem>
             </Grid>
         </Box>
