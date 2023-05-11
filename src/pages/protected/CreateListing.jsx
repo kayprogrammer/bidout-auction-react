@@ -1,6 +1,6 @@
 import { Box, Button, Grid, GridItem, Input, InputGroup, InputLeftAddon, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Text, Textarea, useBreakpointValue } from '@chakra-ui/react'
 import React from 'react'
-import { SubHeader } from '../components'
+import { SubHeader } from '../../components'
 
 const CreateListing = ({ type }) => {
   const displayCols = useBreakpointValue({ base: 1, md: 2 })

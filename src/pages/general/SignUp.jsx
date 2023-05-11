@@ -1,5 +1,5 @@
 import React from 'react'
-import { SubHeader } from '../components'
+import { SubHeader } from '../../components'
 import { Box, Button, Card, CardBody, Checkbox, Heading, Input, Text } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 

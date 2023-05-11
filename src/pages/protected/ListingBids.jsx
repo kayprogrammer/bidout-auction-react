@@ -1,6 +1,6 @@
 import { Box, Heading, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
 import React from 'react'
-import { SubHeader } from '../components'
+import { SubHeader } from '../../components'
 
 const ListingBids = () => {
     const tableElements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

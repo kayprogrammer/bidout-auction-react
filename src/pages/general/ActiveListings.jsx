@@ -4,7 +4,7 @@ import {
     useBreakpointValue,
 } from '@chakra-ui/react';
 
-import { CardListing, SubHeader } from '../components'
+import { CardListing, SubHeader } from '../../components'
 
 const ActiveListings = () => {
     const itemsDisplayCols = useBreakpointValue({ base: 1, md: 2, lg: 3 })

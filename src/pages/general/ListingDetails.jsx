@@ -1,8 +1,8 @@
 import React from 'react'
-import { SubHeader } from '../components'
+import { SubHeader } from '../../components'
 import { Box, Button, Card, CardBody, Flex, Grid, GridItem, Heading, Image, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useBreakpointValue } from '@chakra-ui/react'
 import { Link, useNavigate } from 'react-router-dom'
-import kay from '../assets/kay.png'
+import kay from '../../assets/kay.png'
 
 const ListingDetails = () => {
     const latestBidsElements = [1, 2, 3]

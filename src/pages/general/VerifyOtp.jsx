@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardBody, Heading, Input, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { SubHeader } from '../components'
+import { SubHeader } from '../../components'
 
 const VerifyOtp = () => {
     return (

@@ -12,10 +12,10 @@ import {
   Card,
   Flex,
 } from '@chakra-ui/react';
-import BoredApe from '../assets/boredape.jpg'
-import kay from '../assets/kay.png'
-import quoteImg from '../assets/quote-red.svg'
-import { CardListing } from '../components';
+import BoredApe from '../../assets/boredape.jpg'
+import kay from '../../assets/kay.png'
+import quoteImg from '../../assets/quote-red.svg'
+import { CardListing } from '../../components';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
