@@ -1,10 +1,11 @@
 import { Box, Button, Grid, GridItem, Input, InputGroup, InputLeftAddon, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Text, Textarea, useBreakpointValue } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SubHeader } from '../../components'
 
 const CreateListing = ({ type }) => {
   const displayCols = useBreakpointValue({ base: 1, md: 2 })
   const categoryElements = [1, 2, 3, 4, 5, 6]
+
   return (
     <>
       <SubHeader name={!type ? 'Create a Listing' : 'Update a Listing'} />
@@ -35,7 +36,11 @@ const CreateListing = ({ type }) => {
                 </InputGroup>
               </NumberInput>
               <Text fontSize='19px' mb={2}>Closing Date</Text>
-              <Input type='datetime-local' name='closing_date' />
+              <Input 
+                type='datetime-local' 
+                name='closing_date' 
+                min={new Date().toLocaleString("sv-SE").replace(" ", "T").split(".")[0].slice(0, -3)}
+              />
             </GridItem>
             <GridItem>
               <Text fontSize='19px' mb={2}>Product Description</Text>
