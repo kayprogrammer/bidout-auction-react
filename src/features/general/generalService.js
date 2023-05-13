@@ -1,18 +1,16 @@
 import axios from 'axios';
 
-
-const SITEDETAIL_URL = "/general/site-detail/"
-const REVIEWS_URL = "/general/reviews/"
+axios.defaults.baseURL =`${process.env.REACT_APP_BASE_API_URL}/general`
 
 // Retrieve Site Details
 const getSitedetails = async () => {
-    const response = await axios.get(SITEDETAIL_URL);
+    const response = await axios.get('/site-detail/');
     return response.data;
 }
 
 // Retrieve Reviews
 const getReviews = async () => {
-    const response = await axios.get(REVIEWS_URL);
+    const response = await axios.get('/reviews/');
     return response.data;
 }
 

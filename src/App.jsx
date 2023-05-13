@@ -7,12 +7,14 @@ import {
 import './App.css'
 import { Header, Footer } from './components'
 import { Home, ActiveListings, SignUp, Login, VerifyOtp, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList } from './pages';
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   document.title = "Kay's Auction House"
   return (
     <ChakraProvider>
       <Box className='app' w='100%'>
+        <ToastContainer theme='dark'/>
         <Header />
         <div className='main'>
           <Routes>

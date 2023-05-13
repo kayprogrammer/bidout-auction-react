@@ -44,12 +44,12 @@ export const generalSlice = createSlice({
             .addCase(getSitedetails.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.sitedetails=action.payload.results;
+                state.sitedetails=action.payload.data;
             })
             .addCase(getSitedetails.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message=action.payload.message
             })
             .addCase(getReviews.pending, (state) =>  {
                 state.isLoading = true
@@ -57,12 +57,12 @@ export const generalSlice = createSlice({
             .addCase(getReviews.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.reviews=action.payload.results;
+                state.reviews=action.payload.data;
             })
             .addCase(getReviews.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message=action.payload.message
             })
     },
 })

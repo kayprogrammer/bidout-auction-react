@@ -1,5 +1,5 @@
 import { Box, Image, Heading, Input, Button, Grid, GridItem, useBreakpointValue, Text } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Logo from '../assets/footer-logo.png';
 import FooterPay1 from '../assets/footer-pay1.png';
 import FooterPay2 from '../assets/footer-pay2.png';
@@ -11,11 +11,15 @@ import '../styles/Footer.css'
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter, faFacebookF, faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSitedetails } from '../features/general/generalSlice';
+import { toast } from 'react-toastify';
+
 const Footer = () => {
+    // Styles
     const numDetailCols = useBreakpointValue({ base: 1, md: 2, lg: 4 });
     const numCopyrightCols = useBreakpointValue({ base: 1, md: 2, lg: 2 });
     const payDisplayCols = useBreakpointValue({ base: 3, md: 5, lg: 5 });
-
 
     const heading_styles = {
         fontSize: "22px",
@@ -27,8 +31,24 @@ const Footer = () => {
     const link_styles = {
         color: 'white',
         marginBottom: '11px',
-        fontSize: '15px'
+        fontSize: '15px',
     }
+    // -----------------------------------
+
+    // Data retieval
+    const { sitedetails, isLoading, isError, message } = useSelector((state) => state.general)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (isError) {
+        toast.error(message, { icon: "😭" })
+        }
+        dispatch(getSitedetails())
+    }, [dispatch, isError, message])
+
+    if (isLoading) return;
+    // ------------------------------
 
     return (
         <Box bottom='0' width='100%' backgroundColor='black' padding='35px'>
@@ -45,19 +65,19 @@ const Footer = () => {
                             </form>
                         </li>
                         <li >
-                            <FontAwesomeIcon icon={faTwitter} color='white' size='lg' style={{ marginRight: '25px' }} />
-                            <FontAwesomeIcon icon={faFacebookF} color='white' size='lg' style={{ marginRight: '25px' }} />
-                            <FontAwesomeIcon icon={faWhatsapp} color='white' size='lg' style={{ marginRight: '25px' }} />
-                            <FontAwesomeIcon icon={faInstagram} color='white' size='lg' style={{ marginRight: '25px' }} />
+                            <Link to={sitedetails.tw}><FontAwesomeIcon icon={faTwitter} color='white' size='lg' style={{ marginRight: '25px' }} /></Link>
+                            <Link to={sitedetails.fb}><FontAwesomeIcon icon={faFacebookF} color='white' size='lg' style={{ marginRight: '25px' }} /></Link>
+                            <Link to={sitedetails.wh}><FontAwesomeIcon icon={faWhatsapp} color='white' size='lg' style={{ marginRight: '25px' }} /></Link>
+                            <Link to={sitedetails.ig}><FontAwesomeIcon icon={faInstagram} color='white' size='lg' style={{ marginRight: '25px' }} /></Link>
                         </li>
                     </ul>
                 </GridItem>
                 <GridItem paddingRight='25px' w='100%'>
                     <Heading {...heading_styles}>Important Links</Heading>
                     <ul>
-                        <li style={link_styles}><Link to='#'>All Products</Link></li>
+                        <li style={link_styles}><Link to='/listings'>All Products</Link></li>
                         <li style={link_styles}><Link to='#'>How It Works</Link></li>
-                        <li style={link_styles}><Link to='#'>My Account</Link></li>
+                        <li style={link_styles}><Link to='/dashboard'>My Account</Link></li>
                         <li style={link_styles}><Link to='#'>About Company</Link></li>
                         <li style={link_styles}><Link to='#'>Our News Feed</Link></li>
                     </ul>
@@ -76,15 +96,15 @@ const Footer = () => {
                 <GridItem paddingRight='25px' w='100%'>
                     <Image src={Logo} alt='Logo' mb='3.5' />
                     <ul>
-                        <li style={link_styles}>Add: 168/170, Avenue 01, Mirpur DOHS, Bangladesh.</li>
-                        <li style={link_styles}>Phone: +029169852 / +88017600000</li>
-                        <li style={link_styles}>Email: info.example@gmail.com</li>
+                        <li style={link_styles}>Add: {sitedetails.address}</li>
+                        <li style={link_styles}>Phone: {sitedetails.phone}</li>
+                        <li style={link_styles}>Email: {sitedetails.email}</li>
                     </ul>
                 </GridItem>
             </Grid>
             <hr />
             <Grid templateColumns={[`repeat(${numCopyrightCols}, 1fr)`]} padding='20px 20px 0 20px' alignItems='center'>
-                <GridItem color='white'>Copyright: Kay's Auction House ©{new Date().getFullYear()}</GridItem>
+                <GridItem color='white'>Copyright: {sitedetails.name} ©{new Date().getFullYear()}</GridItem>
                 <GridItem color="white" marginLeft={{ md: 'auto' }} marginTop={{ sm: '13px' }}>
                     <Text mb={2} mt={{ base: 4, md: 0 }}>We accept: </Text>
                     <Grid gap={4} templateColumns={[`repeat(${payDisplayCols}, 1fr)`]}>

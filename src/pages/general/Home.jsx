@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Heading,
   Text,
@@ -15,8 +16,10 @@ import {
 import BoredApe from '../../assets/boredape.jpg'
 import kay from '../../assets/kay.png'
 import quoteImg from '../../assets/quote-red.svg'
-import { CardListing } from '../../components';
+import { Spinner, CardListing } from '../../components';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { getReviews } from '../../features/general/generalSlice';
 
 const Home = () => {
   const firstDisplayCols = useBreakpointValue({ base: 1, md: 1, lg: 2 })
@@ -27,11 +30,25 @@ const Home = () => {
     color: 'white',
     _hover: { bg: 'red.600' }
   }
+  const boxStyles = {
+    padding: { md: '70px', sm: '70px', base: "30px" },
+    minHeight: '28.7vh'
+  }
   const itemElements = [1, 2, 3, 4, 5, 6]
-  const reviewElements = [1, 2, 3]
+  const { reviews, isLoading, isError, message } = useSelector((state) => state.general)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message, { icon: "😭" })
+    }
+    dispatch(getReviews())
+  }, [dispatch, isError, message])
+
+  if (isLoading) return <Spinner />;
 
   return (
-    <Box padding={{ md: '70px', sm: '70px', base: "30px" }} minHeight='28.7vh'>
+    <Box {...boxStyles}>
       <Grid templateColumns={[`repeat(${firstDisplayCols}, 1fr)`]} gap={6}>
         <GridItem>
           <Heading fontSize={15} color='rgb(220, 53, 69)' fontWeight='bold' mb={6}>Welcome to the Auction House</Heading>
@@ -64,15 +81,15 @@ const Home = () => {
         <Text display='table' m='0 auto' maxW={{ lg: '55%' }}>Explore on the world's best & largest Bidding marketplace with our beautiful Bidding products. We want to be a part of your smile, success and future growth.</Text>
       </Box>
       <Grid mt='60px' templateColumns={[`repeat(${itemsDisplayCols}, 1fr)`]} gap={5}>
-        {reviewElements.map((el) => (
-          <Card>
+        {reviews.map((review, i) => (
+          <Card key={i}>
             <CardBody>
               <Flex mb={5}>
-                <Image src={kay} alt='avatar' borderRadius='full' boxSize='60px' objectFit='cover' />
+                <Image src={review.reviewer.avatar || kay} alt='avatar' borderRadius='full' boxSize='60px' objectFit='cover' />
                 <Image src={quoteImg} style={{ marginLeft: 'auto', color: 'grey' }} />
               </Flex>
-              <Heading size='md' mb={3}>Johan Martin R</Heading>
-              <Text>Maecenas vitae porttitor neque, ac porttitor nunc. Duis venenatis lacinia libero. Nam nec augue ut nunc vulputate tincidunt at suscipit nunc.</Text>
+              <Heading size='md' mb={3}>{review.reviewer.name}</Heading>
+              <Text>{review.text}</Text>
             </CardBody>
           </Card>
         ))}
