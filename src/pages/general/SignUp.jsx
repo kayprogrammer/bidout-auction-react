@@ -75,10 +75,9 @@ const SignUp = () => {
                             <Text>Password*</Text>
                             <Input type='password' name='password' value={userData.password} mb={6} required onChange={handleChange} />
 
-                            <Checkbox name='terms_agreement' isChecked={userData.terms_agreement} mb={8} onChange={handleChange}>I agree to the Terms & Policy</Checkbox>
+                            <Checkbox name='terms_agreement' isChecked={userData.terms_agreement} mb={8} onChange={handleChange} required>I agree to the Terms & Policy</Checkbox>
                             <Button
                                 {...(isLoading && { ...loadingButtonAttrs })}
-                                // {...loadingButtonAttrs}
                                 type='submit'
                                 color='white'
                                 bgColor='rgb(220, 53, 69)'

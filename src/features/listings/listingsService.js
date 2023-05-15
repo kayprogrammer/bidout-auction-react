@@ -1,12 +1,10 @@
 import axios from 'axios';
 
-axios.defaults.baseURL =`${process.env.REACT_APP_BASE_API_URL}/listings`
-
 // Retrieve listings
 const getListings = async (quantity) => {
-    var url = '/'
+    var url = '/listings/'
     if (quantity){
-        url = `/?quantity=${quantity}`
+        url = `/listings/?quantity=${quantity}`
     } 
     const response = await axios.get(url);
     return response.data;
