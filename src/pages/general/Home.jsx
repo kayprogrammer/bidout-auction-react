@@ -18,7 +18,7 @@ import kay from '../../assets/kay.png'
 import quoteImg from '../../assets/quote-red.svg'
 import { Spinner, CardListing } from '../../components';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import toast from '../toasts';
 import { getReviews } from '../../features/general/generalSlice';
 
 const Home = () => {
@@ -40,7 +40,7 @@ const Home = () => {
 
   useEffect(() => {
     if (isError) {
-      toast.error(message, { icon: "😭" })
+      toast.error(message)
     }
     dispatch(getReviews())
   }, [dispatch, isError, message])

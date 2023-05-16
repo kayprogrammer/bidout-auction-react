@@ -3,7 +3,7 @@ import { SubHeader } from '../../components'
 import { Box, Button, Card, CardBody, Checkbox, Heading, Input, Text } from '@chakra-ui/react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
+import toast from '../toasts'
 import { reset } from '../../features/general/generalSlice'
 import { register } from '../../features/auth/authSlice'
 
@@ -16,7 +16,6 @@ const SignUp = () => {
         terms_agreement: false
     })
     const [errors, setErrors] = useState({})
-
     const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -27,7 +26,7 @@ const SignUp = () => {
         }
         if (isSuccess || user) {
             navigate("/verify-otp")
-            toast.success(message);
+            toast.success(message)
         }
 
         dispatch(reset())

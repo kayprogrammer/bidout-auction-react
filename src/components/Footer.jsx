@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter, faFacebookF, faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSitedetails } from '../features/general/generalSlice';
-import { toast } from 'react-toastify';
+import toast from '../pages/toasts';
 
 const Footer = () => {
     // Styles
@@ -42,7 +42,7 @@ const Footer = () => {
 
     useEffect(() => {
         if (isError) {
-        toast.error(message, { icon: "😭" })
+            toast.error(message)
         }
         dispatch(getSitedetails())
     }, [dispatch, isError, message])
