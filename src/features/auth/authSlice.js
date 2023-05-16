@@ -8,7 +8,7 @@ const initialState = {
     isError: false,
     isLoading: false,
     isSuccess: false,
-    message: ''
+    message: {}
 };
 
 export const register = createAsyncThunk(
@@ -17,7 +17,7 @@ export const register = createAsyncThunk(
         try {
             return await authService.register(user)
         } catch (error) {
-            const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+            const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
             return thunkAPI.rejectWithValue(message);
         }
     }
@@ -27,7 +27,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     try {
         return await authService.login(user)
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 });
@@ -40,7 +40,7 @@ export const activate = createAsyncThunk("auth/activate", async (user, thunkAPI)
     try {
         return await authService.activate(user)
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -49,7 +49,7 @@ export const resendActivationEmail = createAsyncThunk("auth/resendActivationEmai
     try {
         return await authService.resendActivationEmail(user)
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -58,7 +58,7 @@ export const requestPasswordResetEmail = createAsyncThunk("auth/requestPasswordR
     try {
         return await authService.requestPasswordResetEmail(user)
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -67,7 +67,7 @@ export const verifyPasswordResetOtp = createAsyncThunk("auth/verifyPasswordReset
     try {
         return await authService.verifyPasswordResetOtp(user)
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -76,7 +76,7 @@ export const setNewPassword = createAsyncThunk("auth/setNewPassword", async (use
     try {
         return await authService.setNewPassword(user)
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -106,7 +106,7 @@ export const authSlice = createSlice({
             .addCase(register.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.message
+                state.message = action.payload
             })
             .addCase(login.pending, (state) => {
                 state.isLoading = true
@@ -119,7 +119,7 @@ export const authSlice = createSlice({
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.message
+                state.message = action.payload
                 state.user = null;
             })
             .addCase(logout.pending, (state) => {
@@ -134,7 +134,7 @@ export const authSlice = createSlice({
             .addCase(logout.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.message
+                state.message = action.payload
                 state.user = null;
             })
             .addCase(activate.pending, (state) => {
@@ -147,7 +147,7 @@ export const authSlice = createSlice({
             .addCase(activate.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload.message;
+                state.message = action.payload;
                 state.user = null;
             })
     },

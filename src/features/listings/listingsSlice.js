@@ -15,7 +15,7 @@ export const getListings = createAsyncThunk('listings/getAll', async (quantity=n
     try {
         return await listingsService.getListings(quantity);
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -25,7 +25,7 @@ export const getListing = createAsyncThunk('listings/get', async (listingId, thu
     try {
         return await listingsService.getListing(listingId);
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -49,7 +49,7 @@ export const listingsSlice = createSlice({
             .addCase(getListings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload.message
+                state.message=action.payload
             })
             .addCase(getListing.pending, (state) =>  {
                 state.isLoading = true
@@ -62,7 +62,7 @@ export const listingsSlice = createSlice({
             .addCase(getListing.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload.message
+                state.message=action.payload
             })
     },
 })

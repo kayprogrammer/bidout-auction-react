@@ -15,16 +15,7 @@ const SignUp = () => {
         password: "",
         terms_agreement: false
     })
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        if (name === 'terms_agreement') {
-            setUserData({ ...userData, terms_agreement: e.target.checked });
-        } else {
-            setUserData({ ...userData, [name]: value })
-        }
-    }
+    const [errors, setErrors] = useState({})
 
     const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
     const navigate = useNavigate();
@@ -32,9 +23,8 @@ const SignUp = () => {
 
     useEffect(() => {
         if (isError) {
-            toast.error(message)
+            setErrors(message)
         }
-
         if (isSuccess || user) {
             navigate("/verify-otp")
             toast.success(message);
@@ -42,6 +32,41 @@ const SignUp = () => {
 
         dispatch(reset())
     }, [isError, isSuccess, message, user, navigate, dispatch])
+
+    const simpleValidation = (name, value) => {
+        if (name === 'first_name' || name === 'last_name') {
+            if (value.includes(' ')) {
+                setErrors({ ...errors, [name]: 'No spacing allowed' })
+            } else {
+                setErrors({ ...errors, [name]: '' })
+            }
+        } else if (name === 'password') {
+            if (value.length < 8) {
+                setErrors({ ...errors, [name]: '8 characters min!' })
+            } else {
+                setErrors({ ...errors, [name]: '' })
+            }
+        } else if (name === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                setErrors({ ...errors, [name]: 'Invalid email!' })
+            } else {
+                setErrors({ ...errors, [name]: '' })
+            }
+        }
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'terms_agreement') {
+            setUserData({ ...userData, terms_agreement: e.target.checked });
+        } else {
+            setUserData({ ...userData, [name]: value })
+        }
+
+        // Simple Validations
+        simpleValidation(name, value)
+    }
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -64,19 +89,26 @@ const SignUp = () => {
 
                         <form method='POST' onSubmit={submitHandler}>
                             <Text>First name*</Text>
-                            <Input type='name' name='first_name' value={userData.first_name} mb={6} required onChange={handleChange} />
+                            <Input type='name' name='first_name' value={userData.first_name} required onChange={handleChange} {...(errors.first_name && { isInvalid: true })} />
+                            <Text mb={5} fontSize={13} fontWeight='bold' color='red.500'>{errors?.first_name}</Text>
 
                             <Text>Last name*</Text>
-                            <Input type='name' name='last_name' value={userData.last_name} mb={6} required onChange={handleChange} />
+                            <Input type='name' name='last_name' value={userData.last_name} required onChange={handleChange} {...(errors.last_name && { isInvalid: true })} />
+                            <Text mb={5} fontSize={13} fontWeight='bold' color='red.500'>{errors?.last_name}</Text>
 
                             <Text>Email Address*</Text>
-                            <Input type='email' name='email' value={userData.email} mb={6} required onChange={handleChange} />
+                            <Input type='email' name='email' value={userData.email} required onChange={handleChange} {...(errors.email && { isInvalid: true })} />
+                            <Text mb={5} fontSize={13} fontWeight='bold' color='red.500'>{errors?.email}</Text>
 
                             <Text>Password*</Text>
-                            <Input type='password' name='password' value={userData.password} mb={6} required onChange={handleChange} />
+                            <Input type='password' name='password' value={userData.password} required onChange={handleChange} {...(errors.password && { isInvalid: true })} />
+                            <Text mb={5} fontSize={13} fontWeight='bold' color='red.500'>{errors?.password}</Text>
 
-                            <Checkbox name='terms_agreement' isChecked={userData.terms_agreement} mb={8} onChange={handleChange} required>I agree to the Terms & Policy</Checkbox>
+                            <Checkbox name='terms_agreement' isChecked={userData.terms_agreement} onChange={handleChange} required {...(errors.terms_agreement && { isInvalid: true })}>I agree to the Terms & Policy</Checkbox>
+                            <Text mb={7} fontSize={13} fontWeight='bold' color='red.500'>{errors?.terms_agreement}</Text>
+
                             <Button
+                                {...((!Object.values(errors).every(value => value === '')) && { isDisabled: true })}
                                 {...(isLoading && { ...loadingButtonAttrs })}
                                 type='submit'
                                 color='white'

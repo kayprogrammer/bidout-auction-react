@@ -15,7 +15,7 @@ export const getSitedetails = createAsyncThunk('sitedetails/get', async (_, thun
     try {
         return await generalService.getSitedetails();
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -25,7 +25,7 @@ export const getReviews = createAsyncThunk('reviews/getAll', async (_, thunkAPI)
     try {
         return await generalService.getReviews();
     } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
     }
 })
@@ -49,7 +49,7 @@ export const generalSlice = createSlice({
             .addCase(getSitedetails.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload.message
+                state.message=action.payload
             })
             .addCase(getReviews.pending, (state) =>  {
                 state.isLoading = true
@@ -62,7 +62,7 @@ export const generalSlice = createSlice({
             .addCase(getReviews.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload.message
+                state.message=action.payload
             })
     },
 })
