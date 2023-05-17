@@ -1,10 +1,10 @@
 import { Box, Button, Card, CardBody, Heading, Input, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { SubHeader } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from '../toasts'
-import { reset } from '../../features/auth/authSlice'
+import { resendActivationEmail, reset } from '../../features/auth/authSlice'
 import { activate } from '../../features/auth/authSlice'
 
 const VerifyOtp = () => {
@@ -13,7 +13,7 @@ const VerifyOtp = () => {
         otp: ""
     })
 
-    const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
+    const { user, isLoading, isError, isSuccess, otpResent, message } = useSelector((state) => state.auth)
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
@@ -21,20 +21,22 @@ const VerifyOtp = () => {
         if (!user?.email) {
             navigate('/')
         }
-        setUserData((prevUserData) => ({ 
-            ...prevUserData, 
-            email: user?.email 
+        setUserData((prevUserData) => ({
+            ...prevUserData,
+            email: user?.email
         }))
         if (isError) {
             toast.error(message)
         }
         if (isSuccess) {
-            navigate("/login")
+            if (!otpResent) {
+                navigate("/login")
+            }
             toast.success(message)
         }
 
         dispatch(reset())
-    }, [isError, isSuccess, message, user, navigate, dispatch ])
+    }, [isError, isSuccess, message, user, navigate, dispatch, otpResent])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,17 +64,17 @@ const VerifyOtp = () => {
 
                         <form method='POST' onSubmit={submitHandler}>
                             <Text>Otp*</Text>
-                            <Input type='number' name='otp' mb={6} value={userData.otp} required onChange={handleChange} {...(isError && { isInvalid: true })}/>
+                            <Input type='number' name='otp' mb={6} value={userData.otp} required onChange={handleChange} {...(isError && { isInvalid: true })} />
                             <Button
-                                {...(isLoading && { ...loadingButtonAttrs })}
-                                type='submit' 
-                                color='white' 
-                                bgColor='rgb(25, 135, 84)' 
-                                _hover={{ bg: 'green.600' }} 
+                                {...((isLoading && !otpResent) && { ...loadingButtonAttrs })}
+                                type='submit'
+                                color='white'
+                                bgColor='rgb(25, 135, 84)'
+                                _hover={{ bg: 'green.600' }}
                                 w='100%'
                             >Submit
                             </Button>
-                            <Text mt={4}><Link to='/signup' style={{ color: 'rgb(220, 53, 69)', fontWeight: 'bold' }}>Click Here!</Link> to get new otp</Text>
+                            <Text mt={4} display='flex'><Text role='button' color='rgb(220, 53, 69)' fontWeight='bold' mr={1} onClick={() => { dispatch(resendActivationEmail({ "email": user?.email })) }}>Click Here!</Text> to get new otp</Text>
                         </form>
                     </CardBody>
                 </Card>

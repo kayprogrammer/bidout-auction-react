@@ -6,7 +6,8 @@ const initialState = {
     isError: false,
     isLoading: false,
     isSuccess: false,
-    message: ''
+    message: '',
+    otpResent: false
 };
 
 export const register = createAsyncThunk(
@@ -88,26 +89,27 @@ export const authSlice = createSlice({
             state.isError = false
             state.isSuccess = false;
             state.message = "";
+            state.otpResent = false;
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(register.pending, (state) => {
-                state.isLoading = true
+                state.isLoading = true;
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.user = action.payload.data;
-                state.message = action.payload.message
+                state.message = action.payload.message;
             })
             .addCase(register.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload
+                state.message = action.payload;
             })
             .addCase(login.pending, (state) => {
-                state.isLoading = true
+                state.isLoading = true;
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -117,7 +119,7 @@ export const authSlice = createSlice({
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload
+                state.message = action.payload;
                 state.user = null;
             })
             .addCase(logout.pending, (state) => {
@@ -131,18 +133,34 @@ export const authSlice = createSlice({
             .addCase(logout.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload
+                state.message = action.payload;
                 state.user = null;
             })
             .addCase(activate.pending, (state) => {
-                state.isLoading = true
+                state.isLoading = true;
             })
             .addCase(activate.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.message = action.payload.message
+                state.message = action.payload.message;
+
             })
             .addCase(activate.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(resendActivationEmail.pending, (state) => {
+                state.isLoading = true;
+                state.otpResent = true;
+            })
+            .addCase(resendActivationEmail.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload.message;
+                state.otpResent = true;
+            })
+            .addCase(resendActivationEmail.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
