@@ -10,7 +10,7 @@ const Login = () => {
             <Box minHeight='28.7vh' p='30'>
                 <Card maxW='100%' width='570px' display='table' m='0 auto' boxShadow='lg'>
                     <CardBody>
-                        <Heading size='xl' textAlign='center'>Sign Up</Heading>
+                        <Heading size='xl' textAlign='center'>Login</Heading>
                         <Text textAlign='center' mt='2' mb={10}>Don't have an account? <Link to='/signup' style={{ color: 'rgb(220, 53, 69)', fontWeight: 'bold' }}>Sign Up Here!</Link></Text>
 
                         <form method='POST'>

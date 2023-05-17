@@ -4,7 +4,7 @@ import { Box, Button, Card, CardBody, Checkbox, Heading, Input, Text } from '@ch
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from '../toasts'
-import { reset } from '../../features/general/generalSlice'
+import { reset } from '../../features/auth/authSlice'
 import { register } from '../../features/auth/authSlice'
 
 const SignUp = () => {

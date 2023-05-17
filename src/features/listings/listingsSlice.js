@@ -33,9 +33,6 @@ export const getListing = createAsyncThunk('listings/get', async (listingId, thu
 export const listingsSlice = createSlice({
     name: 'listings',
     initialState,
-    reducers: {
-        reset: (state) => initialState
-    },
     extraReducers: (builder) => {
         builder
             .addCase(getListings.pending, (state) =>  {

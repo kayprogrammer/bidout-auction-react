@@ -33,9 +33,6 @@ export const getReviews = createAsyncThunk('reviews/getAll', async (_, thunkAPI)
 export const generalSlice = createSlice({
     name: 'general',
     initialState,
-    reducers: {
-        reset: (state) => initialState
-    },
     extraReducers: (builder) => {
         builder
             .addCase(getSitedetails.pending, (state) =>  {
