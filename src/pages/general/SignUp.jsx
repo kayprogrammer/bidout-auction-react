@@ -24,7 +24,7 @@ const SignUp = () => {
         if (isError) {
             setErrors(message)
         }
-        if (isSuccess || user) {
+        if (isSuccess) {
             navigate("/verify-otp")
             toast.success(message)
         }

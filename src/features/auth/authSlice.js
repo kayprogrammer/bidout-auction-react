@@ -8,7 +8,7 @@ const initialState = {
     isError: false,
     isLoading: false,
     isSuccess: false,
-    message: {}
+    message: ''
 };
 
 export const register = createAsyncThunk(
