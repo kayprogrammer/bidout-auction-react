@@ -53,9 +53,9 @@ export const resendActivationEmail = createAsyncThunk("auth/resendActivationEmai
     }
 })
 
-export const requestPasswordResetEmail = createAsyncThunk("auth/requestPasswordResetEmail", async (user, thunkAPI) => {
+export const requestPasswordReset = createAsyncThunk("auth/requestPasswordReset", async (user, thunkAPI) => {
     try {
-        return await authService.requestPasswordResetEmail(user)
+        return await authService.requestPasswordReset(user)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
@@ -161,6 +161,49 @@ export const authSlice = createSlice({
                 state.otpResent = true;
             })
             .addCase(resendActivationEmail.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(requestPasswordReset.pending, (state) => {
+                state.isLoading = true;
+                state.otpResent = true;
+            })
+            .addCase(requestPasswordReset.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload.message;
+                state.otpResent = true;
+                state.user = action.meta.arg
+            })
+            .addCase(requestPasswordReset.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(verifyPasswordResetOtp.pending, (state) => {
+                state.isLoading = true;
+                state.otpResent = false;
+            })
+            .addCase(verifyPasswordResetOtp.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload.message;
+            })
+            .addCase(verifyPasswordResetOtp.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(setNewPassword.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(setNewPassword.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload.message;
+            })
+            .addCase(setNewPassword.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

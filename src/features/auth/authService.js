@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // Register user
 const config = {
+    withCredentials: true,
     headers: {
         "Content-Type": "application/json"
     }
@@ -40,7 +41,7 @@ const resendActivationEmail = async (userData) => {
 };
 
 // Request Password Reset Email 
-const requestPasswordResetEmail = async (userData) => {
+const requestPasswordReset = async (userData) => {
     const response = await axios.post('/auth/request-password-reset-otp/', userData, config);
     return response.data;
 };
@@ -63,7 +64,7 @@ const authService = {
     logout,
     activate,
     resendActivationEmail,
-    requestPasswordResetEmail,
+    requestPasswordReset,
     verifyPasswordResetOtp,
     setNewPassword
 }

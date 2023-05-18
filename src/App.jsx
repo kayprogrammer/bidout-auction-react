@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import './App.css'
 import { Header, Footer } from './components'
-import { Home, ActiveListings, SignUp, Login, VerifyOtp, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList } from './pages';
+import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, VerifyPasswordOtp } from './pages';
 
 const App = () => {
   document.title = "Kay's Auction House"
@@ -21,7 +21,8 @@ const App = () => {
             <Route path="/watchlist" element={<WatchList />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/verify-otp" element={<VerifyOtp />} />
+            <Route path="/verify-activation-otp" element={<VerifyActivationOtp />} />
+            <Route path="/verify-password-otp" element={<VerifyPasswordOtp />} />
             <Route path="/password-reset-request" element={<PasswordResetRequest />} />
             <Route path="/password-reset" element={<PasswordReset />} />
             <Route path="/create-listing" element={<CreateListing />} />

@@ -25,7 +25,7 @@ const SignUp = () => {
             setErrors(message)
         }
         if (isSuccess) {
-            navigate("/verify-otp")
+            navigate("/verify-activation-otp")
             toast.success(message)
         }
 

@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom'
 import { SubHeader } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from '../toasts'
-import { resendActivationEmail, reset } from '../../features/auth/authSlice'
-import { activate } from '../../features/auth/authSlice'
+import { requestPasswordReset, reset } from '../../features/auth/authSlice'
+import { verifyPasswordResetOtp } from '../../features/auth/authSlice'
 
-const VerifyOtp = () => {
+const VerifyPasswordOtp = () => {
     const [userData, setUserData] = useState({
         email: "",
         otp: ""
@@ -30,7 +30,7 @@ const VerifyOtp = () => {
         }
         if (isSuccess) {
             if (!otpResent) {
-                navigate("/login")
+                navigate("/password-reset")
             }
             toast.success(message)
         }
@@ -45,7 +45,7 @@ const VerifyOtp = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(activate(userData))
+        dispatch(verifyPasswordResetOtp(userData))
     }
 
     const loadingButtonAttrs = {
@@ -55,7 +55,7 @@ const VerifyOtp = () => {
     }
     return (
         <>
-            <SubHeader name='Verify Otp' />
+            <SubHeader name='Verify Password Otp' />
             <Box minHeight='28.7vh' padding='30'>
                 <Card maxW='100%' width='570px' display='table' m='0 auto' boxShadow='lg'>
                     <CardBody>
@@ -74,7 +74,7 @@ const VerifyOtp = () => {
                                 w='100%'
                             >Submit
                             </Button>
-                            <Text mt={4} display='flex'><Text role='button' color='rgb(220, 53, 69)' fontWeight='bold' mr={1} onClick={() => { dispatch(resendActivationEmail({ "email": user?.email })) }}>Click Here!</Text> to get new otp</Text>
+                            <Text mt={4} display='flex'><Text role='button' color='rgb(220, 53, 69)' fontWeight='bold' mr={1} onClick={() => { dispatch(requestPasswordReset({ "email": user?.email })) }}>Click Here!</Text> to get new otp</Text>
                         </form>
                     </CardBody>
                 </Card>
@@ -83,4 +83,4 @@ const VerifyOtp = () => {
     )
 }
 
-export default VerifyOtp
+export default VerifyPasswordOtp
