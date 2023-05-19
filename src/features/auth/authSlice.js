@@ -62,15 +62,6 @@ export const requestPasswordReset = createAsyncThunk("auth/requestPasswordReset"
     }
 })
 
-export const verifyPasswordResetOtp = createAsyncThunk("auth/verifyPasswordResetOtp", async (user, thunkAPI) => {
-    try {
-        return await authService.verifyPasswordResetOtp(user)
-    } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
-        return thunkAPI.rejectWithValue(message);
-    }
-})
-
 export const setNewPassword = createAsyncThunk("auth/setNewPassword", async (user, thunkAPI) => {
     try {
         return await authService.setNewPassword(user)
@@ -177,20 +168,6 @@ export const authSlice = createSlice({
                 state.user = action.meta.arg
             })
             .addCase(requestPasswordReset.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload;
-            })
-            .addCase(verifyPasswordResetOtp.pending, (state) => {
-                state.isLoading = true;
-                state.otpResent = false;
-            })
-            .addCase(verifyPasswordResetOtp.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isSuccess = true;
-                state.message = action.payload.message;
-            })
-            .addCase(verifyPasswordResetOtp.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

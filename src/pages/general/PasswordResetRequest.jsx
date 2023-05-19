@@ -19,7 +19,7 @@ const PasswordResetRequest = () => {
             toast.error(message)
         }
         if (isSuccess) {
-            navigate("/verify-password-otp")
+            navigate("/password-reset")
             toast.success(message)
         }
 

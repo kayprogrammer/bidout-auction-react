@@ -2,7 +2,6 @@ import axios from 'axios';
 
 // Register user
 const config = {
-    withCredentials: true,
     headers: {
         "Content-Type": "application/json"
     }
@@ -16,9 +15,6 @@ const register = async (userData) => {
 // Login user 
 const login = async (userData) => {
     const response = await axios.post('/auth/login/', userData, config);
-    if (response.data) {
-        localStorage.setItem("user", JSON.stringify(response.data.data))
-    }
     return response.data;
 };
 

@@ -3,7 +3,6 @@ export { default as ActiveListings } from './general/ActiveListings';
 export { default as SignUp } from './general/SignUp';
 export { default as Login } from './general/Login';
 export { default as VerifyActivationOtp } from './general/VerifyActivationOtp';
-export { default as VerifyPasswordOtp } from './general/VerifyPasswordOtp';
 export { default as PasswordResetRequest } from './general/PasswordResetRequest';
 export { default as PasswordReset } from './general/PasswordReset';
 export { default as CreateListing } from './protected/CreateListing';
