@@ -5,6 +5,7 @@ export { default as Login } from './general/Login';
 export { default as VerifyActivationOtp } from './general/VerifyActivationOtp';
 export { default as PasswordResetRequest } from './general/PasswordResetRequest';
 export { default as PasswordReset } from './general/PasswordReset';
+export { default as ProtectedRoute } from './protected/ProtectedRoute';
 export { default as CreateListing } from './protected/CreateListing';
 export { default as ListingDetails } from './general/ListingDetails';
 export { default as UserDashboard } from './protected/UserDashboard';

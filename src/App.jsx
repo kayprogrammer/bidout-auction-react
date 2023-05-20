@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import './App.css'
 import { Header, Footer } from './components'
-import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp } from './pages';
+import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, ProtectedRoute } from './pages';
 
 const App = () => {
   document.title = "Kay's Auction House"
@@ -30,7 +30,6 @@ const App = () => {
             <Route path="/dashboard/listings" element={<AllUserListings />} />
             <Route path="/dashboard/listings/:listing_id/bids" element={<ListingBids />} />
             <Route path="/dashboard/listings/:listing_id/update" element={<CreateListing type="update" />} />
-
           </Routes>
         </div>
         <Footer />
