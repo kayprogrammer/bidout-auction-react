@@ -24,12 +24,13 @@ const App = () => {
             <Route path="/verify-activation-otp" element={<VerifyActivationOtp />} />
             <Route path="/password-reset-request" element={<PasswordResetRequest />} />
             <Route path="/password-reset" element={<PasswordReset />} />
-            <Route path="/create-listing" element={<CreateListing />} />
             <Route path="/listings/:listing_id" element={<ListingDetails />} />
-            <Route path="/dashboard" element={<UserDashboard />} />
-            <Route path="/dashboard/listings" element={<AllUserListings />} />
-            <Route path="/dashboard/listings/:listing_id/bids" element={<ListingBids />} />
-            <Route path="/dashboard/listings/:listing_id/update" element={<CreateListing type="update" />} />
+
+            <Route path="/dashboard" element={<ProtectedRoute Component={UserDashboard} />} />
+            <Route path="/dashboard/listings" element={<ProtectedRoute Component={AllUserListings} />} />
+            <Route path="/dashboard/listings/:listing_id/bids" element={<ProtectedRoute Component={ListingBids} />} />
+            <Route path="/create-listing" element={<ProtectedRoute Component={CreateListing} />} />
+            <Route path="/dashboard/listings/:listing_id/update" element={<ProtectedRoute Component={CreateListing} type='update' />} />
           </Routes>
         </div>
         <Footer />
