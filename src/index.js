@@ -6,10 +6,7 @@ import { BrowserRouter } from 'react-router-dom'; // import BrowserRouter
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { createStandaloneToast } from '@chakra-ui/react'
-import axios from 'axios';
 import { PersistGate } from 'redux-persist/integration/react';
-
-axios.defaults.baseURL = process.env.REACT_APP_BASE_API_URL
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);

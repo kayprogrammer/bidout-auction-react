@@ -1,56 +1,51 @@
-import axios from 'axios';
+import api from '../api'
 
 // Register user
-const config = {
-    headers: {
-        "Content-Type": "application/json"
-    }
-};
 
 const register = async (userData) => {
-    const response = await axios.post('/auth/register/', userData, config);
+    const response = await api.post('/auth/register/', userData);
     return response.data;
 }
 
 // Login user 
 const login = async (userData) => {
-    const response = await axios.post('/auth/login/', userData, config);
+    const response = await api.post('/auth/login/', userData);
     return response.data;
 };
 
 // Logout user 
 const logout = async () => {
-    const response = await axios.get('/auth/logout/');
+    const response = await api.get('/auth/logout/');
     return response.data;
 };
 
 // Activate user 
 const activate = async (userData) => {
-    const response = await axios.post('/auth/verify-email/', userData, config);
+    const response = await api.post('/auth/verify-email/', userData);
     return response.data;
 };
 
 // Resend Activation Email 
 const resendActivationEmail = async (userData) => {
-    const response = await axios.post('/auth/resend-verification-email/', userData, config);
+    const response = await api.post('/auth/resend-verification-email/', userData);
     return response.data;
 };
 
 // Request Password Reset Email 
 const requestPasswordReset = async (userData) => {
-    const response = await axios.post('/auth/request-password-reset-otp/', userData, config);
+    const response = await api.post('/auth/request-password-reset-otp/', userData);
     return response.data;
 };
 
 // Verify Password Reset Otp 
 const verifyPasswordResetOtp = async (userData) => {
-    const response = await axios.post('/auth/verify-password-reset-otp/', userData, config);
+    const response = await api.post('/auth/verify-password-reset-otp/', userData);
     return response.data;
 };
 
 // Set New Password 
 const setNewPassword = async (userData) => {
-    const response = await axios.post('/auth/set-new-password/', userData, config);
+    const response = await api.post('/auth/set-new-password/', userData);
     return response.data;
 };
 

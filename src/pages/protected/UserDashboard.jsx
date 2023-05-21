@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
-import { SubHeader } from '../../components'
+import React, { useEffect, useState } from 'react'
+import { Spinner, SubHeader } from '../../components'
 import { Box, Button, Card, Grid, GridItem, Image, Input, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from '@chakra-ui/react'
 import kay from '../../assets/kay.png'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAuctioneerListings } from '../../features/listings/listingsSlice'
+import toast from '../toasts'
 
 const UserDashboard = () => {
     const [currentTab, setCurrentTab] = useState('dashboard')
@@ -13,6 +16,14 @@ const UserDashboard = () => {
     const profileDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 2, lg: 2 })
 
     const navigate = useNavigate();
+    const { listings, isLoading } = useSelector((state) => state.listings)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getAuctioneerListings());
+    }, [dispatch])
+
+    if (isLoading) return <Spinner />;
 
     return (
         <>

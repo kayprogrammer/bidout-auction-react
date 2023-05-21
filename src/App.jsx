@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import {
   ChakraProvider,
   Box,
@@ -7,9 +7,19 @@ import {
 import './App.css'
 import { Header, Footer } from './components'
 import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, ProtectedRoute } from './pages';
+import { store } from './app/store';
+import interceptors from "../src/features/interceptors"
+
 
 const App = () => {
   document.title = "Kay's Auction House"
+  const navigate = useNavigate()
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  if (!isLoaded) {
+    setIsLoaded(true)
+    interceptors(store, navigate)
+  }
   return (
     <ChakraProvider>
       <Box className='app' w='100%'>

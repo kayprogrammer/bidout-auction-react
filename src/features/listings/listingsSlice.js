@@ -30,6 +30,16 @@ export const getListing = createAsyncThunk('listings/get', async (listingId, thu
     }
 })
 
+// get auctioneer listings
+export const getAuctioneerListings = createAsyncThunk('listings/getAuctioneerListings', async (quantity=null, thunkAPI) => {
+    try {
+        return await listingsService.getAuctioneerListings(quantity);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 export const listingsSlice = createSlice({
     name: 'listings',
     initialState,
@@ -57,6 +67,19 @@ export const listingsSlice = createSlice({
                 state.listing=action.payload.data;
             })
             .addCase(getListing.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message=action.payload
+            })
+            .addCase(getAuctioneerListings.pending, (state) =>  {
+                state.isLoading = true
+            })
+            .addCase(getAuctioneerListings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.listings=action.payload.data;
+            })
+            .addCase(getAuctioneerListings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message=action.payload

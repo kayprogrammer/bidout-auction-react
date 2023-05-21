@@ -41,6 +41,7 @@ const Footer = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
+        
         if (isError) {
             toast.error(message)
         }
