@@ -84,6 +84,9 @@ export const authSlice = createSlice({
         },
         refreshToken: (state, action) => {
             state.user = action.payload
+        },
+        resetUser: (state) => {
+            state.user = null
         }
     },
     extraReducers: (builder) => {
@@ -192,6 +195,6 @@ export const authSlice = createSlice({
     },
 })
 
-export const { reset, refreshToken } = authSlice.actions;
+export const { reset, refreshToken, resetUser } = authSlice.actions;
 
 export default authSlice.reducer;

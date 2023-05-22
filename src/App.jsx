@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import './App.css'
 import { Header, Footer } from './components'
-import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, ProtectedRoute } from './pages';
+import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, ProtectedRoute, PublicRoute } from './pages';
 import { store } from './app/store';
 import interceptors from "../src/features/interceptors"
 
@@ -29,12 +29,13 @@ const App = () => {
             <Route exact path="/" element={<Home />} />
             <Route path="/listings" element={<ActiveListings />} />
             <Route path="/watchlist" element={<WatchList />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/verify-activation-otp" element={<VerifyActivationOtp />} />
-            <Route path="/password-reset-request" element={<PasswordResetRequest />} />
-            <Route path="/password-reset" element={<PasswordReset />} />
             <Route path="/listings/:listing_id" element={<ListingDetails />} />
+
+            <Route path="/signup" element={<PublicRoute Component={SignUp} />} />
+            <Route path="/login" element={<PublicRoute Component={Login} />} />
+            <Route path="/verify-activation-otp" element={<PublicRoute Component={VerifyActivationOtp} />} />
+            <Route path="/password-reset-request" element={<PublicRoute Component={PasswordResetRequest} />} />
+            <Route path="/password-reset" element={<PublicRoute Component={PasswordReset} />} />
 
             <Route path="/dashboard" element={<ProtectedRoute Component={UserDashboard} />} />
             <Route path="/dashboard/listings" element={<ProtectedRoute Component={AllUserListings} />} />

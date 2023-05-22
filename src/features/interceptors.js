@@ -1,5 +1,5 @@
 import api from "./api";
-import { refreshToken } from '../features/auth/authSlice'
+import { refreshToken, resetUser } from '../features/auth/authSlice'
 
 const setup = (store, navigate) => {
   let user = store.getState().auth.user;
@@ -52,6 +52,7 @@ const setup = (store, navigate) => {
             };
             return api(updatedConfig);
           } catch (_error) {
+            dispatch(resetUser())
             navigate("/login")
             return Promise.reject(_error);
           }
