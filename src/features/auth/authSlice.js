@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from './authService';
+import toast from '../../pages/toasts'
 
 const initialState = {
     user: null,
@@ -114,16 +115,15 @@ export const authSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(login.fulfilled, (state, action) => {
-                state.isLoading = false;
+                // state.isLoading = false;
                 state.isSuccess = true;
                 state.user = action.payload.data;
-                state.message = action.payload.message;
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message = action.payload;
                 state.user = null;
+                toast.error(action.payload)
             })
             .addCase(logout.pending, (state) => {
                 state.isLoading = true

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { useSelector } from "react-redux"
 import toast from '../toasts'
 import { useNavigate } from 'react-router-dom';
+import { store } from '../../app/store';
 
 const PublicRoute = ({ Component, ...props }) => {
-    const { user } = useSelector((state) => state.auth); // Check if the user is authenticated
+    const user = store.getState().auth.user
     const navigate = useNavigate();
+
     useEffect(() => {
         if (user?.access) {
             toast.error("Logout first!")
