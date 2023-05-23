@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
-  Flex,
-  Spacer,
   Button,
   Image,
   useBreakpointValue,
   Slide,
+  GridItem,
+  Grid,
 } from '@chakra-ui/react';
 
 import { HamburgerIcon } from '@chakra-ui/icons';
@@ -21,6 +21,7 @@ import { logout } from '../features/auth/authSlice'
 const Header = () => {
   const navigate = useNavigate();
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
+  const navDisplayCols = useBreakpointValue({ base: 2, lg: 4 })
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const linkStyles = {
@@ -45,14 +46,16 @@ const Header = () => {
     })
   }
 
+
   return (
     <>
-      <Box backgroundColor="rgb(248, 249, 250)" px={4} py={3} position="fixed" top="0" left="0" right="0" zIndex="10">
-        <Image src={Logo} float='left' alt='Logo' role='button' onClick={() => navigate('/')} />
-        <Flex mx="auto" height='5vh'>
-          {isLargeScreen && (
-            <>
-              <Spacer />
+      <Grid gap={0} templateColumns={[`repeat(${navDisplayCols}, 1fr)`]} backgroundColor="rgb(248, 249, 250)" px={4} py={3} position="fixed" top="0" left="0" right="0" zIndex="10">
+        <GridItem>
+          <Image src={Logo} float='left' alt='Logo' role='button' onClick={() => navigate('/')} />
+        </GridItem>
+        {isLargeScreen ? (
+          <>
+            <GridItem display='table' colSpan={2} textAlign='center' m='o auto' alignSelf='center'>
               <Link to='/' style={linkStyles}>Home</Link>
               <Link to='/listings' style={linkStyles}>Active Listings</Link>
               {(!user?.access) && (
@@ -61,7 +64,6 @@ const Header = () => {
                   <Link to='/signup' style={linkStyles}>Sign Up</Link>
                 </>
               )}
-
               <Link to='/watchlist' style={linkStyles}>Watch List</Link>
               {(user?.access) && (
                 <>
@@ -69,24 +71,20 @@ const Header = () => {
                   <FontAwesomeIcon icon={faSignOutAlt} style={{ alignSelf: 'center' }} role='button' onClick={handleLogout} />
                 </>
               )}
-
-              <Spacer />
+            </GridItem>
+            <GridItem>
               {(user?.access) && (
                 <Button float='right' _hover={{ bg: 'red.600' }} backgroundColor="rgb(220, 53, 69)" color='white' onClick={() => navigate('/dashboard')}>My Dashboard</Button>
               )}
-            </>
+            </GridItem>
+          </>
+        ) : (
+          <Button ml='auto' onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <HamburgerIcon w={8} h={8} />
+          </Button>
+        )}
 
-          )}
-          {!isLargeScreen && (
-            <>
-              <Spacer />
-              <Button onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                <HamburgerIcon w={8} h={8} />
-              </Button>
-            </>
-          )}
-        </Flex>
-      </Box>
+      </Grid>
       {!isLargeScreen && (
         <Slide backgroundColor="rgb(248, 249, 250)" direction="top" in={isMenuOpen} unmountOnExit={true} style={{ width: "100%", height: "100vh", zIndex: 1 }}>
           <Box pos="absolute" top="60px" left="0" right="0" backgroundColor="rgb(248, 249, 250)" p='1em 2.5em 2.5em 2.5em'>
