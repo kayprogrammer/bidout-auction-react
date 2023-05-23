@@ -1,5 +1,5 @@
 import { Box, Image, Heading, Input, Button, Grid, GridItem, useBreakpointValue, Text } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../assets/footer-logo.png';
 import FooterPay1 from '../assets/footer-pay1.png';
 import FooterPay2 from '../assets/footer-pay2.png';
@@ -12,10 +12,14 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter, faFacebookF, faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSitedetails } from '../features/general/generalSlice';
+import { getSitedetails, subscribe, reset } from '../features/general/generalSlice';
 import toast from '../pages/toasts';
 
 const Footer = () => {
+    const [data, setData] = useState({
+        email: "",
+    })
+
     // Styles
     const numDetailCols = useBreakpointValue({ base: 1, md: 2, lg: 4 });
     const numCopyrightCols = useBreakpointValue({ base: 1, md: 2, lg: 2 });
@@ -36,20 +40,38 @@ const Footer = () => {
     // -----------------------------------
 
     // Data retieval
-    const { sitedetails, isLoading, isError, message } = useSelector((state) => state.general)
+    const { sitedetails, subscriptionLoading, isError, message } = useSelector((state) => state.general)
 
     const dispatch = useDispatch()
 
     useEffect(() => {
-        
         if (isError) {
             toast.error(message)
         }
         dispatch(getSitedetails())
+        dispatch(reset())
     }, [dispatch, isError, message])
 
-    if (isLoading) return;
-    // ------------------------------
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData({ ...data, [name]: value })
+    }
+
+    const submitHandler = (event) => {
+        event.preventDefault()
+        dispatch(subscribe(data)).then((e) => {
+            if (e?.payload?.status === 'success') {
+                toast.success(e.payload.message)
+                setData({ "email": "" })
+            }
+        })
+    }
+
+    const loadingButtonAttrs = {
+        isLoading: true,
+        loadingText: 'Submitting',
+        spinnerPlacement: 'start'
+    }
 
     return (
         <Box bottom='0' width='100%' backgroundColor='black' padding='35px'>
@@ -59,10 +81,10 @@ const Footer = () => {
                     <ul>
                         <li style={{ color: 'white', maxWidth: '90%', marginBottom: '20px' }}>Subscribe our newsletter to get more free design course and resource.</li>
                         <li style={{ marginBottom: "25px" }}>
-                            <form>
-                                <Input type='email' placeholder='your email' mb='10px' backgroundColor='white' />
+                            <form method='POST' onSubmit={submitHandler}>
+                                <Input type='email' name='email' value={data.email} onChange={handleChange} placeholder='your email' mb='10px' backgroundColor='white' />
                                 <br />
-                                <Button type='submit' backgroundColor='rgb(220, 53, 69)' color='white'>Submit</Button>
+                                <Button {...(subscriptionLoading && { ...loadingButtonAttrs })} type='submit' backgroundColor='rgb(220, 53, 69)' _hover={{ bg: 'red.600' }} color='white'>Submit</Button>
                             </form>
                         </li>
                         <li >

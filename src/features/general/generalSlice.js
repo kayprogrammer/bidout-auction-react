@@ -6,6 +6,7 @@ const initialState = {
     reviews: [],
     isError: false,
     isLoading: false,
+    subscriptionLoading: false,
     isSuccess: false,
     message: ''
 }
@@ -30,14 +31,30 @@ export const getReviews = createAsyncThunk('reviews/getAll', async (_, thunkAPI)
     }
 })
 
+// subscribe
+export const subscribe = createAsyncThunk('subscribe/post', async (data, thunkAPI) => {
+    try {
+        return await generalService.subscribe(data);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 export const generalSlice = createSlice({
     name: 'general',
     initialState,
+    reducers: {
+        reset: (state) => {
+            state.isLoading = false;
+            state.isError = false
+            state.isSuccess = false;
+            state.message = "";
+            state.subscribe = false;
+        },
+    },
     extraReducers: (builder) => {
         builder
-            .addCase(getSitedetails.pending, (state) =>  {
-                state.isLoading = true
-            })
             .addCase(getSitedetails.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
@@ -58,6 +75,19 @@ export const generalSlice = createSlice({
             })
             .addCase(getReviews.rejected, (state, action) => {
                 state.isLoading = false;
+                state.isError = true;
+                state.message=action.payload
+            })
+            .addCase(subscribe.pending, (state) =>  {
+                state.subscriptionLoading = true
+            })
+            .addCase(subscribe.fulfilled, (state, action) => {
+                state.subscriptionLoading = false;
+                state.isSuccess = true;
+                state.message=action.payload.message;
+            })
+            .addCase(subscribe.rejected, (state, action) => {
+                state.subscriptionLoading = false;
                 state.isError = true;
                 state.message=action.payload
             })

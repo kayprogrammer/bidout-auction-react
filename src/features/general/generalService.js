@@ -12,6 +12,12 @@ const getReviews = async () => {
     return response.data;
 }
 
-const generalService = { getSitedetails, getReviews }
+// Retrieve Reviews
+const subscribe = async (data) => {
+    const response = await api.post('/general/subscribe/', data);
+    return response.data;
+}
+
+const generalService = { getSitedetails, getReviews, subscribe }
 
 export default generalService;

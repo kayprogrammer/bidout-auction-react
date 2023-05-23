@@ -52,8 +52,9 @@ const setup = (store, navigate) => {
             };
             return api(updatedConfig);
           } catch (_error) {
-            dispatch(resetUser())
-            navigate("/login")
+            dispatch(resetUser()).then(() => {
+              navigate("/login")
+            })
             return Promise.reject(_error);
           }
         }
