@@ -100,7 +100,7 @@ const CardListing = ({listing}) => {
           <Flex>
             <Image src={listing.auctioneer.avatar || kay} onError={handleAcutioneerImageError} alt='avatar' borderRadius='full' boxSize='35px' objectFit='cover' mr={4} />
             <Text>By {listing.auctioneer.name}</Text>
-            <Text ml='auto' color='rgb(220, 53, 69)' fontSize='2xl'>$450</Text>
+            <Text ml='auto' color='rgb(220, 53, 69)' fontSize='2xl'>${listing.price}</Text>
           </Flex>
           <Flex>
             <Button {...buttonStyles}>Place a Bid</Button>
