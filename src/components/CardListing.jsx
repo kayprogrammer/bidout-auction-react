@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
-const CardListing = () => {
+const CardListing = ({listing, key}) => {
   const navigate = useNavigate();
   const buttonStyles = {
     bgColor: 'rgb(220, 53, 69)',

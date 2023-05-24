@@ -25,6 +25,19 @@ const getAuctioneerListings = async (quantity) => {
     const response = await api.get(url);
     return response.data;
 }
-const listingsService = { getListings, getListing, getAuctioneerListings }
+
+// Retrieve Categories
+const getCategories = async () => {
+    const response = await api.get('/listings/categories/');
+    return response.data;
+}
+
+// Create listing
+const createListings = async (listingData) => {
+    const response = await api.post('/auctioneer/listings/', listingData);
+    return response.data;
+}
+
+const listingsService = { getListings, getListing, getAuctioneerListings, getCategories, createListings }
 
 export default listingsService;

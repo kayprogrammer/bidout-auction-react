@@ -20,6 +20,7 @@ import { Spinner, CardListing } from '../../components';
 import { Link } from 'react-router-dom';
 import toast from '../toasts';
 import { getReviews } from '../../features/general/generalSlice';
+import { getListings } from '../../features/listings/listingsSlice';
 
 const Home = () => {
   const firstDisplayCols = useBreakpointValue({ base: 1, md: 1, lg: 2 })
@@ -35,14 +36,19 @@ const Home = () => {
     minHeight: '28.7vh'
   }
   const itemElements = [1, 2, 3, 4, 5, 6]
-  const { reviews, isLoading, isError, message } = useSelector((state) => state.general)
+  const { reviews, listings, isLoading, isError, message } = useSelector((state) => ({
+    ...state.general,
+    ...state.listings
+  }));
   const dispatch = useDispatch()
-
+  console.log(listings)
   useEffect(() => {
     if (isError) {
       toast.error(message)
     }
     dispatch(getReviews())
+    dispatch(getListings(6))
+
   }, [dispatch, isError, message])
 
   if (isLoading) return <Spinner />;
@@ -70,8 +76,8 @@ const Home = () => {
         </GridItem>
       </Grid>
       <Grid mt={12} templateColumns={[`repeat(${itemsDisplayCols}, 1fr)`]} gap={8} alignItems='center'>
-        {itemElements.map((el) => (
-          <CardListing />
+        {listings.map((listing, i) => (
+          <CardListing listing={listing} key={i}/>
         ))}
 
 

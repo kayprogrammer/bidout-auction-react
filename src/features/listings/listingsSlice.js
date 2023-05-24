@@ -4,10 +4,12 @@ import listingsService from './listingsService';
 const initialState = {
     listings: [],
     listing: {},
+    categories: [],
     isError: false,
     isLoading: false,
     isSuccess: false,
-    message: ''
+    message: '',
+    creating: false
 }
 
 // get listings
@@ -34,6 +36,26 @@ export const getListing = createAsyncThunk('listings/get', async (listingId, thu
 export const getAuctioneerListings = createAsyncThunk('listings/getAuctioneerListings', async (quantity=null, thunkAPI) => {
     try {
         return await listingsService.getAuctioneerListings(quantity);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// get categories
+export const getCategories = createAsyncThunk('listings/categories/categories', async (_, thunkAPI) => {
+    try {
+        return await listingsService.getCategories();
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// create listing
+export const createListing = createAsyncThunk('listings/post', async (listingData, thunkAPI) => {
+    try {
+        return await listingsService.createListings(listingData);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
@@ -80,6 +102,34 @@ export const listingsSlice = createSlice({
                 state.listings=action.payload.data;
             })
             .addCase(getAuctioneerListings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message=action.payload
+            })
+            .addCase(getCategories.pending, (state) =>  {
+                state.isLoading = true
+            })
+            .addCase(getCategories.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.categories=action.payload.data;
+            })
+            .addCase(getCategories.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message=action.payload
+            })
+            .addCase(createListing.pending, (state) =>  {
+                state.isLoading = true
+                state.creating = true
+            })
+            .addCase(createListing.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message=action.payload.message;
+
+            })
+            .addCase(createListing.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message=action.payload
