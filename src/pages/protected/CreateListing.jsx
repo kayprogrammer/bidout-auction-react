@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createListing, getCategories } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { useNavigate } from 'react-router-dom'
+import { uploadImage } from '../imageUploader'
 
 const CreateListing = ({ type }) => {
   const displayCols = useBreakpointValue({ base: 1, md: 2 })
@@ -15,6 +16,7 @@ const CreateListing = ({ type }) => {
     price: "",
     closing_date: "",
     desc: "",
+    file: "",
     file_type: "",
   })
 
@@ -30,7 +32,8 @@ const CreateListing = ({ type }) => {
     const { name, value } = e.target;
     
     if (e.target?.files) {
-      setListingData({ ...listingData, [name]: e.target.files[0].type })
+      var file = e.target.files[0]
+      setListingData({ ...listingData, [name]: file.type, "file": file })
     } else {
       setListingData({ ...listingData, [name]: value })
     }
@@ -40,11 +43,15 @@ const CreateListing = ({ type }) => {
 
   const submitHandler = (event) => {
     event.preventDefault()
+    var file = listingData.file
     listingData['closing_date'] = new Date(listingData.closing_date).toISOString()
+    delete listingData['file']
     dispatch(createListing(listingData)).then((e) => {
         if (e?.payload?.status === 'success') {
-            toast.success(e.payload.message)
-            navigate("/")
+          const fileData = e.payload.data.file_upload_data
+          uploadImage(file, fileData.public_id, fileData.signature, fileData.timestamp)
+          toast.success(e.payload.message)
+          navigate("/")
         }
     })
   }
