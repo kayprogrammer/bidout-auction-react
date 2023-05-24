@@ -9,7 +9,6 @@ const initialState = {
     isLoading: false,
     isSuccess: false,
     message: '',
-    creating: false
 }
 
 // get listings
@@ -121,7 +120,6 @@ export const listingsSlice = createSlice({
             })
             .addCase(createListing.pending, (state) =>  {
                 state.isLoading = true
-                state.creating = true
             })
             .addCase(createListing.fulfilled, (state, action) => {
                 state.isLoading = false;

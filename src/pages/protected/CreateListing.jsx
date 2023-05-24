@@ -9,6 +9,7 @@ import { uploadImage } from '../imageUploader'
 
 const CreateListing = ({ type }) => {
   const displayCols = useBreakpointValue({ base: 1, md: 2 })
+  const [createLoading, setCreateLoading] = useState(false)
 
   const [listingData, setListingData] = useState({
     name: "",
@@ -20,7 +21,7 @@ const CreateListing = ({ type }) => {
     file_type: "",
   })
 
-  const { categories, creating, isLoading, isError } = useSelector((state) => state.listings)
+  const { categories, isLoading } = useSelector((state) => state.listings)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -39,27 +40,30 @@ const CreateListing = ({ type }) => {
     }
   }
 
-  if (isLoading && !creating) return <Spinner />;
+  if (isLoading && !createLoading) return <Spinner />;
 
   const submitHandler = (event) => {
     event.preventDefault()
+    setCreateLoading(true)
     var file = listingData.file
     listingData['closing_date'] = new Date(listingData.closing_date).toISOString()
     delete listingData['file']
     dispatch(createListing(listingData)).then((e) => {
         if (e?.payload?.status === 'success') {
           const fileData = e.payload.data.file_upload_data
-          uploadImage(file, fileData.public_id, fileData.signature, fileData.timestamp)
-          toast.success(e.payload.message)
-          navigate("/")
+          uploadImage(file, fileData.public_id, fileData.signature, fileData.timestamp).then(() => {
+            setCreateLoading(false)
+            toast.success(e.payload.message)
+            navigate("/")
+          })
         }
     })
   }
 
   const loadingButtonAttrs = {
-      isLoading,
-      loadingText: 'Creating...',
-      spinnerPlacement: 'start'
+      isLoading: true,
+      loadingText: 'Creating',
+      spinnerPlacement: 'start',
   }
 
   return (
@@ -105,7 +109,9 @@ const CreateListing = ({ type }) => {
               <Textarea name='desc' rows={6} onChange={handleChange} value={listingData.desc} />
             </GridItem>
           </Grid>
-          <Button {...((isLoading && creating) && { ...loadingButtonAttrs })} display='table' m='0 auto' mt='3.5em' mb='3.5em' size='lg' type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }}>{!type ? 'Create Listing' : 'Update Listing'}</Button>
+          <Box textAlign='center' mt='3.5em' mb='3.5em'>
+            <Button {...(createLoading && { ...loadingButtonAttrs })} size='lg' type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }}>{!type ? 'Create Listing' : 'Update Listing'}</Button>
+          </Box>
         </form>
       </Box>
     </>

@@ -35,13 +35,12 @@ const Home = () => {
     padding: { md: '70px', sm: '70px', base: "30px" },
     minHeight: '28.7vh'
   }
-  const itemElements = [1, 2, 3, 4, 5, 6]
   const { reviews, listings, isLoading, isError, message } = useSelector((state) => ({
     ...state.general,
     ...state.listings
   }));
   const dispatch = useDispatch()
-  console.log(listings)
+
   useEffect(() => {
     if (isError) {
       toast.error(message)
