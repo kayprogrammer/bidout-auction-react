@@ -1,6 +1,7 @@
 import { Box, Button, Card, CloseButton, Heading, Slide, ModalOverlay, Modal } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
+import { store } from '../app/store';
 
 const SubHeader = ({ name, backgroundColor }) => {
   const current_path = window.location.pathname
@@ -17,7 +18,8 @@ const SubHeader = ({ name, backgroundColor }) => {
     _hover: { bg: 'rgb(108, 117, 125)' }
   }
 
-  const categoryElements = [1, 2, 3, 4, 5]
+  const categories = store.getState().listings.categories
+  
   return (
     <>
       <Box display={{ sm: 'block', md: 'flex' }} bgColor={bgColor} alignItems='center' p={{ base: '30px 30px 30px 30px', md: '58px 100px 50px 100px' }}>
@@ -38,8 +40,8 @@ const SubHeader = ({ name, backgroundColor }) => {
             <Heading color='gray' mt={6} ml={3}>Categories</Heading>
             <Box p={7} pt={6}>
               <Button {...categoryButtonStyles}><Link>All</Link></Button>
-              {categoryElements.map((el) => (
-                <Button {...categoryButtonStyles}><Link>Category {el}</Link></Button>
+              {categories.map((category, i) => (
+                <Button {...categoryButtonStyles} key={i}><Link>{category.name}</Link></Button>
               ))}
               <Button {...categoryButtonStyles}><Link>Other</Link></Button>
             </Box>
