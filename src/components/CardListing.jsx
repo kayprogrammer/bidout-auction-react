@@ -15,6 +15,8 @@ import kay from '../assets/kay.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addListingToWatchlist } from '../features/listings/listingsSlice';
 
 const CardListing = ({listing}) => {
   const navigate = useNavigate();
@@ -35,6 +37,12 @@ const CardListing = ({listing}) => {
   const [countdown, setCountdown] = useState('');
 
   useEffect(() => {
+    if (listing.watchlist){
+      setHeartColour('red')
+    } else {
+      setHeartColour('grey')
+    }
+    
     const serverDateUTC = new Date(listing.closing_date);
     const serverDateLocal = new Date(
       serverDateUTC.toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone })
@@ -66,8 +74,25 @@ const CardListing = ({listing}) => {
     return () => {
       clearInterval(interval);
     };
+
   }, [listing]);
 
+  const [heartColour, setHeartColour] = useState('grey')
+  const dispatch = useDispatch();
+
+  const handleWatchlist = (event) => {
+    event.preventDefault();
+    dispatch(addListingToWatchlist({"slug": listing.slug})).then((e) => {
+      console.log(e?.payload)
+      if (e?.payload?.status === 'success') {
+        if((e.payload.message).includes('added')){
+          setHeartColour('red')
+        } else {
+          setHeartColour('grey')
+        }
+      }
+    })
+  }
   return (
     <Card width='100%'>
       <CardBody>
@@ -104,7 +129,7 @@ const CardListing = ({listing}) => {
           </Flex>
           <Flex>
             <Button {...buttonStyles}>Place a Bid</Button>
-            <FontAwesomeIcon icon={faHeart} style={{ marginLeft: 'auto', color: 'grey' }} size='2x' role='button' />
+            <FontAwesomeIcon icon={faHeart} style={{ marginLeft: 'auto', color: heartColour }} size='2x' role='button' onClick={handleWatchlist}/>
           </Flex>
 
         </Stack>

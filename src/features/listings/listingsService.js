@@ -10,8 +10,21 @@ const getListings = async (quantity) => {
     return response.data;
 }
 
+// Retrieve Listings By Category
 const getListingsByCategory = async (categorySlug) => {
     const response = await api.get(`/listings/categories/${categorySlug}`);
+    return response.data;
+}
+
+// Retrieve Listings By Watchlist
+const getWatchlistListings = async () => {
+    const response = await api.get('/listings/watchlist/');
+    return response.data;
+}
+
+// Add Listing To Watchlist
+const addListingToWatchlist = async (listingData) => {
+    const response = await api.post('/listings/watchlist/', listingData);
     return response.data;
 }
 
@@ -43,6 +56,6 @@ const createListings = async (listingData) => {
     return response.data;
 }
 
-const listingsService = { getListings, getListingsByCategory, getListing, getAuctioneerListings, getCategories, createListings }
+const listingsService = { getListings, getListingsByCategory, getWatchlistListings, addListingToWatchlist, getListing, getAuctioneerListings, getCategories, createListings }
 
 export default listingsService;

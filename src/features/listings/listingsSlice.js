@@ -31,6 +31,26 @@ export const getListingsByCategory = createAsyncThunk('listings/getByCategory', 
     }
 })
 
+// get watchlist listings
+export const getWatchlistListings = createAsyncThunk('listings/getWatchlistListings', async (_, thunkAPI) => {
+    try {
+        return await listingsService.getWatchlistListings();
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// Add Listing To Watchlist
+export const addListingToWatchlist = createAsyncThunk('listings/addListingToWatchlist', async (listingData, thunkAPI) => {
+    try {
+        return await listingsService.addListingToWatchlist(listingData);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 // get listing
 export const getListing = createAsyncThunk('listings/get', async (listingId, thunkAPI) => {
     try {
@@ -98,6 +118,28 @@ export const listingsSlice = createSlice({
                 state.listings=action.payload.data;
             })
             .addCase(getListingsByCategory.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message=action.payload
+            })
+            .addCase(getWatchlistListings.pending, (state) =>  {
+                state.isLoading = true
+            })
+            .addCase(getWatchlistListings.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.listings=action.payload.data;
+            })
+            .addCase(getWatchlistListings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message=action.payload
+            })
+            .addCase(addListingToWatchlist.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+            })
+            .addCase(addListingToWatchlist.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message=action.payload
