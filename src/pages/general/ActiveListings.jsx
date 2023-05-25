@@ -6,8 +6,9 @@ import {
 
 import { CardListing, Spinner, SubHeader } from '../../components'
 import { useDispatch, useSelector } from 'react-redux';
-import { getCategories, getListings } from '../../features/listings/listingsSlice';
+import { getCategories, getListings, getListingsByCategory } from '../../features/listings/listingsSlice';
 import toast from '../toasts';
+import { useParams } from 'react-router-dom';
 
 const ActiveListings = () => {
     const itemsDisplayCols = useBreakpointValue({ base: 1, md: 2, lg: 3 })
@@ -15,14 +16,21 @@ const ActiveListings = () => {
     const { listings, isLoading, isError, message } = useSelector((state) => state.listings);
     const dispatch = useDispatch()
     
+    const { categorySlug } = useParams();
+
     useEffect(() => {
     if (isError) {
         toast.error(message)
     }
-    dispatch(getListings())
+    if (categorySlug) {
+        dispatch(getListingsByCategory(categorySlug))
+    } else {
+        dispatch(getListings())
+
+    }
     dispatch(getCategories())
 
-    }, [dispatch, isError, message])
+    }, [dispatch, isError, message, categorySlug])
 
     if (isLoading) return <Spinner />;
 

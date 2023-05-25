@@ -28,8 +28,9 @@ const App = () => {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route path="/listings" element={<ActiveListings />} />
+            <Route path="/listings/:categorySlug" element={<ActiveListings />} />
             <Route path="/watchlist" element={<WatchList />} />
-            <Route path="/listings/:listing_id" element={<ListingDetails />} />
+            <Route path="/listings/:listingSlug" element={<ListingDetails />} />
 
             <Route path="/signup" element={<PublicRoute Component={SignUp} />} />
             <Route path="/login" element={<PublicRoute Component={Login} />} />
@@ -39,9 +40,9 @@ const App = () => {
 
             <Route path="/dashboard" element={<ProtectedRoute Component={UserDashboard} />} />
             <Route path="/dashboard/listings" element={<ProtectedRoute Component={AllUserListings} />} />
-            <Route path="/dashboard/listings/:listing_id/bids" element={<ProtectedRoute Component={ListingBids} />} />
+            <Route path="/dashboard/listings/:listingSlug/bids" element={<ProtectedRoute Component={ListingBids} />} />
             <Route path="/create-listing" element={<ProtectedRoute Component={CreateListing} />} />
-            <Route path="/dashboard/listings/:listing_id/update" element={<ProtectedRoute Component={CreateListing} type='update' />} />
+            <Route path="/dashboard/listings/:listingSlug/update" element={<ProtectedRoute Component={CreateListing} type='update' />} />
           </Routes>
         </div>
         <Footer />

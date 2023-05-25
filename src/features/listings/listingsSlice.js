@@ -21,6 +21,16 @@ export const getListings = createAsyncThunk('listings/getAll', async (quantity=n
     }
 })
 
+// get listings by category
+export const getListingsByCategory = createAsyncThunk('listings/getByCategory', async (categorySlug, thunkAPI) => {
+    try {
+        return await listingsService.getListingsByCategory(categorySlug);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 // get listing
 export const getListing = createAsyncThunk('listings/get', async (listingId, thunkAPI) => {
     try {
@@ -75,6 +85,19 @@ export const listingsSlice = createSlice({
                 state.listings=action.payload.data;
             })
             .addCase(getListings.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message=action.payload
+            })
+            .addCase(getListingsByCategory.pending, (state) =>  {
+                state.isLoading = true
+            })
+            .addCase(getListingsByCategory.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.listings=action.payload.data;
+            })
+            .addCase(getListingsByCategory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message=action.payload

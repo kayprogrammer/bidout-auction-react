@@ -10,6 +10,11 @@ const getListings = async (quantity) => {
     return response.data;
 }
 
+const getListingsByCategory = async (categorySlug) => {
+    const response = await api.get(`/listings/categories/${categorySlug}`);
+    return response.data;
+}
+
 // Retrieve single listing
 const getListing = async (listingId) => {
     const response = await api.get(`/listings/${listingId}/`);
@@ -38,6 +43,6 @@ const createListings = async (listingData) => {
     return response.data;
 }
 
-const listingsService = { getListings, getListing, getAuctioneerListings, getCategories, createListings }
+const listingsService = { getListings, getListingsByCategory, getListing, getAuctioneerListings, getCategories, createListings }
 
 export default listingsService;
