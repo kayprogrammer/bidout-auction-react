@@ -16,9 +16,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addListingToWatchlist } from '../features/listings/listingsSlice';
+import { addListingToWatchlist, removeFromWatchlist } from '../features/listings/listingsSlice';
+import { store } from '../app/store';
 
-const CardListing = ({listing}) => {
+const CardListing = ({ listing }) => {
   const navigate = useNavigate();
   const buttonStyles = {
     bgColor: 'rgb(220, 53, 69)',
@@ -37,12 +38,12 @@ const CardListing = ({listing}) => {
   const [countdown, setCountdown] = useState('');
 
   useEffect(() => {
-    if (listing.watchlist){
+    if (listing.watchlist) {
       setHeartColour('red')
     } else {
       setHeartColour('grey')
     }
-    
+
     const serverDateUTC = new Date(listing.closing_date);
     const serverDateLocal = new Date(
       serverDateUTC.toLocaleString('en-US', { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone })
@@ -82,13 +83,17 @@ const CardListing = ({listing}) => {
 
   const handleWatchlist = (event) => {
     event.preventDefault();
-    dispatch(addListingToWatchlist({"slug": listing.slug})).then((e) => {
-      console.log(e?.payload)
+    dispatch(addListingToWatchlist({ "slug": listing.slug })).then((e) => {
       if (e?.payload?.status === 'success') {
-        if((e.payload.message).includes('added')){
-          setHeartColour('red')
+        if (window.location.pathname === '/watchlist' || window.location.pathname === '/watchlist/') {
+          const listings = store.getState().listings.listings
+          dispatch(removeFromWatchlist({ "listings": listings, "slug": listing.slug }))
         } else {
-          setHeartColour('grey')
+          if ((e.payload.message).includes('added')) {
+            setHeartColour('red')
+          } else {
+            setHeartColour('grey')
+          }
         }
       }
     })
@@ -129,7 +134,7 @@ const CardListing = ({listing}) => {
           </Flex>
           <Flex>
             <Button {...buttonStyles}>Place a Bid</Button>
-            <FontAwesomeIcon icon={faHeart} style={{ marginLeft: 'auto', color: heartColour }} size='2x' role='button' onClick={handleWatchlist}/>
+            <FontAwesomeIcon icon={faHeart} style={{ marginLeft: 'auto', color: heartColour }} size='2x' role='button' onClick={handleWatchlist} />
           </Flex>
 
         </Stack>

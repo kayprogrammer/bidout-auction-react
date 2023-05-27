@@ -9,6 +9,7 @@ import { Header, Footer } from './components'
 import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, ProtectedRoute, PublicRoute } from './pages';
 import { store } from './app/store';
 import interceptors from "../src/features/interceptors"
+import CookieConsent from "react-cookie-consent";
 
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
   return (
     <ChakraProvider>
       <Box className='app' w='100%'>
+        <CookieConsent cookieName='session_key'>This website uses third party cookies to enhance the user experience.</CookieConsent>
         <Header />
         <div className='main'>
           <Routes>

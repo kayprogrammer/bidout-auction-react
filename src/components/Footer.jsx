@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter, faFacebookF, faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSitedetails, subscribe, reset } from '../features/general/generalSlice';
+import { getSitedetails, subscribe } from '../features/general/generalSlice';
 import toast from '../pages/toasts';
 
 const Footer = () => {
@@ -49,7 +49,6 @@ const Footer = () => {
             toast.error(message)
         }
         dispatch(getSitedetails())
-        dispatch(reset())
     }, [dispatch, isError, message])
 
     const handleChange = (e) => {

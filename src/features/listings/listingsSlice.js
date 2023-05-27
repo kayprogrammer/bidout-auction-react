@@ -94,6 +94,14 @@ export const createListing = createAsyncThunk('listings/post', async (listingDat
 export const listingsSlice = createSlice({
     name: 'listings',
     initialState,
+    reducers: {
+        removeFromWatchlist: (state, action) => {
+            const listings = action?.payload?.listings
+            const listing_slug = action?.payload?.slug
+            const updated_listings = listings.filter(obj => obj.slug !== listing_slug)
+            state.listings = updated_listings
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getListings.pending, (state) =>  {
@@ -200,5 +208,5 @@ export const listingsSlice = createSlice({
     },
 })
 
-export const { reset } = listingsSlice.actions;
+export const { reset, removeFromWatchlist } = listingsSlice.actions;
 export default listingsSlice.reducer; 

@@ -12,7 +12,7 @@ const getListings = async (quantity) => {
 
 // Retrieve Listings By Category
 const getListingsByCategory = async (categorySlug) => {
-    const response = await api.get(`/listings/categories/${categorySlug}`);
+    const response = await api.get(`/listings/categories/${categorySlug}/`);
     return response.data;
 }
 
