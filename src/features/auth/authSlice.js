@@ -4,6 +4,7 @@ import toast from '../../pages/toasts'
 
 const initialState = {
     user: null,
+    profile: null,
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -71,6 +72,24 @@ export const requestPasswordReset = createAsyncThunk("auth/requestPasswordReset"
 export const setNewPassword = createAsyncThunk("auth/setNewPassword", async (user, thunkAPI) => {
     try {
         return await authService.setNewPassword(user)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+export const getProfile = createAsyncThunk("auctioneer/getProfile", async (_, thunkAPI) => {
+    try {
+        return await authService.getProfile()
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+export const updateProfile = createAsyncThunk("auctioneer/updateProfile", async (user, thunkAPI) => {
+    try {
+        return await authService.updateProfile(user)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
@@ -190,6 +209,25 @@ export const authSlice = createSlice({
                 state.message = action.payload.message;
             })
             .addCase(setNewPassword.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(getProfile.fulfilled, (state, action) => {
+                state.isSuccess = true;
+                state.message = action.payload.message;
+                state.profile = action.payload.data
+            })
+            .addCase(getProfile.rejected, (state, action) => {
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload.message;
+            })
+            .addCase(updateProfile.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

@@ -8,10 +8,20 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAuctioneerListings } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
+import { uploadImage } from '../imageUploader'
+import { getProfile, logout, updateProfile } from '../../features/auth/authSlice'
 
 const UserDashboard = () => {
+    const [userData, setUserData] = useState({
+        first_name: "",
+        last_name: "",
+        file: null,
+        file_type: null,
+        file_url: "",
+    })
+    const [profileUpdateLoading, setProfileUpdateLoading] = useState(false)
+
     const [currentTab, setCurrentTab] = useState('dashboard')
-    const tableElements = [1, 2, 3]
     const tabDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 4, lg: 4 })
     const profileDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 2, lg: 2 })
 
@@ -20,10 +30,66 @@ const UserDashboard = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getAuctioneerListings());
+        dispatch(getAuctioneerListings(10)).then((e) => {
+            dispatch(getProfile()).then((e) => {
+                const profile = e.payload.data
+                setUserData((prevUserData) => ({
+                    ...prevUserData,
+                    first_name: profile?.first_name,
+                    last_name: profile?.last_name,
+                    file_url: profile?.avatar || kay
+                }));
+            });
+        })
     }, [dispatch])
 
     if (isLoading) return <Spinner />;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        if (e.target?.files) {
+            var file = e.target.files[0]
+            setUserData({ ...userData, [name]: file.type, file: file })
+        } else {
+            setUserData({ ...userData, [name]: value })
+        }
+    }
+
+    const submitHandler = (event) => {
+        event.preventDefault()
+        setProfileUpdateLoading(true)
+        var file = userData.file
+        delete userData['file']
+        dispatch(updateProfile(userData)).then((e) => {
+            if (e?.payload?.status === 'success') {
+                const fileData = e.payload.data.file_upload_data
+                if (file) {
+                    uploadImage(file, fileData.public_id, fileData.signature, fileData.timestamp).then(() => {
+                        setProfileUpdateLoading(false)
+                        toast.success(e.payload.message)
+                        setUserData({ ...userData, file_url: URL.createObjectURL(file), file_type: null })
+                    })
+                } else {
+                    setProfileUpdateLoading(false)
+                    toast.success(e.payload.message)
+                }
+
+            }
+        })
+    }
+
+    const handleLogout = () => {
+        dispatch(logout()).then(() => {
+            navigate('/login')
+        })
+    }
+
+    const loadingButtonAttrs = {
+        isLoading: true,
+        loadingText: 'Updating',
+        spinnerPlacement: 'start',
+    }
 
     return (
         <>
@@ -37,7 +103,7 @@ const UserDashboard = () => {
                         <Card role='button' p={3.5} borderRadius={0} mb={4} onClick={() => setCurrentTab('profile')}>
                             <Text>My Profile</Text>
                         </Card>
-                        <Card role='button' bgColor='rgb(220, 53, 69)' p={3.5} borderRadius={0}>
+                        <Card role='button' bgColor='rgb(220, 53, 69)' p={3.5} borderRadius={0} onClick={handleLogout}>
                             <Text color='white'>Logout</Text>
                         </Card>
                     </GridItem>
@@ -56,14 +122,14 @@ const UserDashboard = () => {
                                         </Tr>
                                     </Thead>
                                     <Tbody>
-                                        {tableElements.map((el) => (
-                                            <Tr>
-                                                <Td>1</Td>
-                                                <Td>Brand New royal Enfield 250 CC For special Sale</Td>
-                                                <Td>$1000</Td>
+                                        {listings.map((listing, i) => (
+                                            <Tr key={i}>
+                                                <Td>{i + 1}</Td>
+                                                <Td>{listing.name}</Td>
+                                                <Td>${listing.price}</Td>
                                                 <Td>Active</Td>
-                                                <Td>1</Td>
-                                                <Td role='button' onClick={() => navigate(`/dashboard/listings/${el}/update`)}><FontAwesomeIcon icon={faEdit}/></Td>
+                                                <Td>{listing.bids_count}</Td>
+                                                <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
                                             </Tr>
                                         ))}
                                     </Tbody>
@@ -71,22 +137,24 @@ const UserDashboard = () => {
                                 <Text fontWeight='bold' fontSize='sm' color='blue' role='button' mt={4} textAlign='center' onClick={() => navigate('/dashboard/listings')}>All listings!</Text>
                             </>
                         ) : (
-                            <>
+                            <form method='POST' onSubmit={submitHandler}>
                                 <Grid templateColumns={[`repeat(${profileDisplayCols}, 1fr)`]} gap={6}>
                                     <GridItem>
                                         <Text fontSize={{ base: '17px', md: '21px' }}>Avatar</Text>
-                                        <Image src={kay} w='100%' maxH='300px' objectFit='cover' mb={4} />
-                                        <Input type='file' p={1.5} name='image' required mb={3} />
+                                        <Image src={userData?.file_url} w='100%' maxH='300px' objectFit='cover' mb={4} />
+                                        <Input type='file' p={1.5} name='file_type' mb={3} onChange={handleChange} />
                                     </GridItem>
                                     <GridItem>
                                         <Text fontSize={{ base: '17px', md: '21px' }}>First Name</Text>
-                                        <Input type='text' name='first_name' required mb={4} />
+                                        <Input type='text' name='first_name' required mb={4} onChange={handleChange} value={userData.first_name} />
                                         <Text fontSize={{ base: '17px', md: '21px' }}>Last Name</Text>
-                                        <Input type='text' name='last_name' required />
+                                        <Input type='text' name='last_name' required onChange={handleChange} value={userData.last_name} />
                                     </GridItem>
                                 </Grid>
-                                <Button display='table' m='0 auto' mt='3.5em' mb='3.5em' size='lg' type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }}>Update Profile</Button>
-                            </>
+                                <Box mt='3.5em' mb='3.5em' textAlign='center'>
+                                    <Button {...(profileUpdateLoading && { ...loadingButtonAttrs })} size='lg' type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }}>Update Profile</Button>
+                                </Box>
+                            </form>
                         )}
                     </GridItem>
                 </Grid>

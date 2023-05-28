@@ -61,9 +61,9 @@ const CreateListing = ({ type }) => {
   }
 
   const loadingButtonAttrs = {
-      isLoading: true,
-      loadingText: 'Creating',
-      spinnerPlacement: 'start',
+    isLoading: true,
+    loadingText: 'Creating',
+    spinnerPlacement: 'start',
   }
 
   return (

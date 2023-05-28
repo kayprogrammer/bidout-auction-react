@@ -49,6 +49,18 @@ const setNewPassword = async (userData) => {
     return response.data;
 };
 
+// Get User Profile 
+const getProfile = async () => {
+    const response = await api.get('/auctioneer/');
+    return response.data;
+};
+
+// Update User Profile 
+const updateProfile = async (userData) => {
+    const response = await api.put('/auctioneer/', userData);
+    return response.data;
+};
+
 const authService = {
     register,
     login,
@@ -57,7 +69,9 @@ const authService = {
     resendActivationEmail,
     requestPasswordReset,
     verifyPasswordResetOtp,
-    setNewPassword
+    setNewPassword,
+    getProfile,
+    updateProfile
 }
 
 export default authService;

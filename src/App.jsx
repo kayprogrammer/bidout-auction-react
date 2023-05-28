@@ -16,11 +16,11 @@ const App = () => {
   document.title = "Kay's Auction House"
   const navigate = useNavigate()
   const [isLoaded, setIsLoaded] = useState(false)
-
   if (!isLoaded) {
     setIsLoaded(true)
     interceptors(store, navigate)
   }
+
   return (
     <ChakraProvider>
       <Box className='app' w='100%'>
