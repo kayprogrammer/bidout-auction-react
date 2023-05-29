@@ -3,9 +3,9 @@ import api from '../api'
 // Retrieve listings
 const getListings = async (quantity) => {
     var url = '/listings/'
-    if (quantity){
+    if (quantity) {
         url = `/listings/?quantity=${quantity}`
-    } 
+    }
     const response = await api.get(url);
     return response.data;
 }
@@ -37,9 +37,9 @@ const getListing = async (listingId) => {
 // Retrieve Auctioneer listings
 const getAuctioneerListings = async (quantity) => {
     var url = '/auctioneer/listings/'
-    if (quantity){
+    if (quantity) {
         url = `/auctioneer/listings/?quantity=${quantity}`
-    } 
+    }
     const response = await api.get(url);
     return response.data;
 }
@@ -58,7 +58,7 @@ const createListings = async (listingData) => {
 
 // Update listing
 const updateListing = async (listingData) => {
-    const slug = listingData.slug 
+    const slug = listingData.slug
     delete listingData['slug']
     const response = await api.patch(`/auctioneer/listings/${slug}`, listingData);
     return response.data;

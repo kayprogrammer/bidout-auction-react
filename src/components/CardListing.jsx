@@ -31,7 +31,7 @@ const CardListing = ({ listing }) => {
     event.target.src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'; // Replace with your fallback image link
   };
 
-  const handleAcutioneerImageError = (event) => {
+  const handleAuctioneerImageError = (event) => {
     event.target.src = kay; // Replace with your fallback image link
   };
 
@@ -128,7 +128,7 @@ const CardListing = ({ listing }) => {
         <Stack mt='6' spacing='3'>
           <Heading fontSize={23} mb={2}>{listing.name}</Heading>
           <Flex>
-            <Image src={listing.auctioneer.avatar || kay} onError={handleAcutioneerImageError} alt='avatar' borderRadius='full' boxSize='35px' objectFit='cover' mr={4} />
+            <Image src={listing.auctioneer.avatar || kay} onError={handleAuctioneerImageError} alt='avatar' borderRadius='full' boxSize='35px' objectFit='cover' mr={4} />
             <Text>By {listing.auctioneer.name}</Text>
             <Text ml='auto' color='rgb(220, 53, 69)' fontSize='2xl'>${listing.price}</Text>
           </Flex>

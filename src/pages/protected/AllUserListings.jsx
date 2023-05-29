@@ -28,6 +28,7 @@ const AllUserListings = () => {
         if (status === 'Active') {
             listingData['active'] = false
         }
+        console.log(listingData)
 
         dispatch(updateListing(listingData)).then((e) => {
             if (e?.payload?.status === 'success') {

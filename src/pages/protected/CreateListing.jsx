@@ -2,9 +2,9 @@ import { Box, Button, Grid, GridItem, Input, InputGroup, InputLeftAddon, NumberD
 import React, { useEffect, useState } from 'react'
 import { Spinner, SubHeader } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
-import { createListing, getCategories } from '../../features/listings/listingsSlice'
+import { createListing, getCategories, getListing, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { uploadImage } from '../imageUploader'
 
 const CreateListing = ({ type }) => {
@@ -17,52 +17,91 @@ const CreateListing = ({ type }) => {
     price: "",
     closing_date: "",
     desc: "",
-    file: "",
-    file_type: "",
+    file: null,
+    file_type: null,
   })
 
   const { categories, isLoading } = useSelector((state) => state.listings)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+  const { listingSlug } = useParams();
+
   useEffect(() => {
-    dispatch(getCategories())
-  }, [dispatch])
+    dispatch(getCategories()).then((e) => {
+      if (e?.payload?.status === 'success'){
+        const categories = e.payload.data
+        if (listingSlug) {
+          dispatch(getListing(listingSlug)).then((e) => {
+            if (e?.payload?.status === 'success'){
+              const listing = e.payload.data
+              const listingCategory = categories.find(category => category.name === listing.category)
+              
+              const closingDate = new Date(listing.closing_date)
+              const closingDateLocal = new Date(closingDate.getTime() - closingDate.getTimezoneOffset()*60000).toISOString()
+
+              setListingData((prevListingData) => ({
+                ...prevListingData,
+                name: listing.name,
+                category: listingCategory ? listingCategory.slug : "other",
+                price: listing.price,
+                closing_date: closingDateLocal.substring(0, closingDateLocal.lastIndexOf(".")),
+                desc: listing.desc,
+
+              }))
+            }
+          })
+        }
+      }
+    })
+  }, [dispatch, listingSlug])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (e.target?.files) {
       var file = e.target.files[0]
-      setListingData({ ...listingData, [name]: file.type, "file": file })
+      setListingData({ ...listingData, [name]: file.type, file: file })
     } else {
       setListingData({ ...listingData, [name]: value })
     }
   }
 
   if (isLoading && !createLoading) return <Spinner />;
-
+  console.log(listingData)
   const submitHandler = (event) => {
     event.preventDefault()
     setCreateLoading(true)
     var file = listingData.file
     listingData['closing_date'] = new Date(listingData.closing_date).toISOString()
     delete listingData['file']
-    dispatch(createListing(listingData)).then((e) => {
-        if (e?.payload?.status === 'success') {
-          const fileData = e.payload.data.file_upload_data
+    if (!file){
+      delete listingData['file_type']
+    }
+
+    if (type) {
+      listingData['slug'] = listingSlug 
+    }
+    dispatch(type ? updateListing(listingData) : createListing(listingData)).then((e) => {
+      if (e?.payload?.status === 'success') {
+        const fileData = e.payload.data.file_upload_data
+        if (file) {
           uploadImage(file, fileData.public_id, fileData.signature, fileData.timestamp).then(() => {
             setCreateLoading(false)
             toast.success(e.payload.message)
-            navigate("/")
+            navigate("/dashboard/listings")
           })
+        } else {
+          setCreateLoading(false)
+          toast.success(e.payload.message)
+          navigate("/dashboard/listings")
         }
+      }
     })
   }
 
   const loadingButtonAttrs = {
     isLoading: true,
-    loadingText: 'Creating',
+    loadingText: type ? 'Updating' : 'Creating',
     spinnerPlacement: 'start',
   }
 
@@ -72,7 +111,7 @@ const CreateListing = ({ type }) => {
       <Box p={{ base: "30px", lg: "50px 140px 50px 140px" }} w='100%'>
         <form method='POST' onSubmit={submitHandler}>
           <Text fontSize='22px' mb={2}>Upload a clear image of your item</Text>
-          <Input type='file' p={1.5} name='file_type' required mb={3} onChange={handleChange} accept="image/png, image/jpeg, image/bmp, image/webp" />
+          <Input type='file' p={1.5} name='file_type' required={type ? false : true} mb={3} onChange={handleChange} accept="image/png, image/jpeg, image/bmp, image/webp" />
           <Grid gap={6} templateColumns={[`repeat(${displayCols}, 1fr)`]}>
             <GridItem>
               <Text fontSize='19px' mb={2}>Product Name</Text>
@@ -85,9 +124,9 @@ const CreateListing = ({ type }) => {
                 <option value='other'>Other</option>
               </Select>
               <Text fontSize='19px' mb={2}>Bidding Price</Text>
-              <NumberInput mb={4}>
+              <NumberInput mb={4} value={listingData.price}>
                 <InputGroup>
-                  <InputLeftAddon children='$'/>
+                  <InputLeftAddon children='$' />
                   <NumberInputField name='price' placeholder='Enter a starting price' onChange={handleChange} value={listingData.price} required />
                   <NumberInputStepper>
                     <NumberIncrementStepper />
@@ -96,10 +135,10 @@ const CreateListing = ({ type }) => {
                 </InputGroup>
               </NumberInput>
               <Text fontSize='19px' mb={2}>Closing Date</Text>
-              <Input 
-                type='datetime-local' 
-                name='closing_date' 
-                onChange={handleChange} 
+              <Input
+                type='datetime-local'
+                name='closing_date'
+                onChange={handleChange}
                 value={listingData.closing_date}
                 min={new Date().toLocaleString("sv-SE").replace(" ", "T").split(".")[0].slice(0, -3)}
               />
