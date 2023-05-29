@@ -56,6 +56,12 @@ const createListings = async (listingData) => {
     return response.data;
 }
 
-const listingsService = { getListings, getListingsByCategory, getWatchlistListings, addListingToWatchlist, getListing, getAuctioneerListings, getCategories, createListings }
+// Retrieve listing bids
+const retrieveListingBids = async (listingSlug) => {
+    const response = await api.get(`/auctioneer/listings/${listingSlug}/bids/`);
+    return response.data;
+}
+
+const listingsService = { getListings, getListingsByCategory, getWatchlistListings, addListingToWatchlist, getListing, getAuctioneerListings, getCategories, createListings, retrieveListingBids }
 
 export default listingsService;

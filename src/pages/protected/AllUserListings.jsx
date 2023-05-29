@@ -47,7 +47,7 @@ const AllUserListings = () => {
                                     <Td maxW='100%' w='15%'><Image src={listing.image} onError={handleListingImageError} /></Td>
                                     <Td>${listing.price}</Td>
                                     <Td>Active</Td>
-                                    <Td><Link to='/dashboard/listings/1/bids'>{listing.bids_count}</Link></Td>
+                                    <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
                                     <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
                                 </Tr>
                             ))}

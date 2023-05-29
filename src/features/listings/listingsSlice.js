@@ -5,6 +5,7 @@ const initialState = {
     listings: [],
     listing: {},
     categories: [],
+    bids: [],
     isError: false,
     isLoading: false,
     isSuccess: false,
@@ -12,7 +13,7 @@ const initialState = {
 }
 
 // get listings
-export const getListings = createAsyncThunk('listings/getAll', async (quantity=null, thunkAPI) => {
+export const getListings = createAsyncThunk('listings/getAll', async (quantity = null, thunkAPI) => {
     try {
         return await listingsService.getListings(quantity);
     } catch (error) {
@@ -62,7 +63,7 @@ export const getListing = createAsyncThunk('listings/get', async (listingId, thu
 })
 
 // get auctioneer listings
-export const getAuctioneerListings = createAsyncThunk('listings/getAuctioneerListings', async (quantity=null, thunkAPI) => {
+export const getAuctioneerListings = createAsyncThunk('listings/getAuctioneerListings', async (quantity = null, thunkAPI) => {
     try {
         return await listingsService.getAuctioneerListings(quantity);
     } catch (error) {
@@ -91,6 +92,16 @@ export const createListing = createAsyncThunk('listings/post', async (listingDat
     }
 })
 
+// Retrieve listing bids
+export const retrieveListingBids = createAsyncThunk('listings/retrieveListingBids', async (listingSlug, thunkAPI) => {
+    try {
+        return await listingsService.retrieveListingBids(listingSlug);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 export const listingsSlice = createSlice({
     name: 'listings',
     initialState,
@@ -104,44 +115,44 @@ export const listingsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getListings.pending, (state) =>  {
+            .addCase(getListings.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(getListings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.listings=action.payload.data;
+                state.listings = action.payload.data;
             })
             .addCase(getListings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
             })
-            .addCase(getListingsByCategory.pending, (state) =>  {
+            .addCase(getListingsByCategory.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(getListingsByCategory.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.listings=action.payload.data;
+                state.listings = action.payload.data;
             })
             .addCase(getListingsByCategory.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
             })
-            .addCase(getWatchlistListings.pending, (state) =>  {
+            .addCase(getWatchlistListings.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(getWatchlistListings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.listings=action.payload.data;
+                state.listings = action.payload.data;
             })
             .addCase(getWatchlistListings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
             })
             .addCase(addListingToWatchlist.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -150,60 +161,74 @@ export const listingsSlice = createSlice({
             .addCase(addListingToWatchlist.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
             })
-            .addCase(getListing.pending, (state) =>  {
+            .addCase(getListing.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(getListing.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.listing=action.payload.data;
+                state.listing = action.payload.data;
             })
             .addCase(getListing.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
             })
-            .addCase(getAuctioneerListings.pending, (state) =>  {
+            .addCase(getAuctioneerListings.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(getAuctioneerListings.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.listings=action.payload.data;
+                state.listings = action.payload.data;
             })
             .addCase(getAuctioneerListings.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
             })
-            .addCase(getCategories.pending, (state) =>  {
+            .addCase(getCategories.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(getCategories.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.categories=action.payload.data;
+                state.categories = action.payload.data;
             })
             .addCase(getCategories.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
             })
-            .addCase(createListing.pending, (state) =>  {
+            .addCase(createListing.pending, (state) => {
                 state.isLoading = true
             })
             .addCase(createListing.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.message=action.payload.message;
+                state.message = action.payload.message;
 
             })
             .addCase(createListing.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.message=action.payload
+                state.message = action.payload
+            })
+            .addCase(retrieveListingBids.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(retrieveListingBids.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.bids = action.payload.data.bids;
+                state.listing = {name: action.payload.data.listing}
+            })
+            .addCase(retrieveListingBids.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload
             })
     },
 })

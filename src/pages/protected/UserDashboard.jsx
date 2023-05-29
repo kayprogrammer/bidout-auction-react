@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Spinner, SubHeader } from '../../components'
 import { Box, Button, Card, Grid, GridItem, Image, Input, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from '@chakra-ui/react'
 import kay from '../../assets/kay.png'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
@@ -128,7 +128,7 @@ const UserDashboard = () => {
                                                 <Td>{listing.name}</Td>
                                                 <Td>${listing.price}</Td>
                                                 <Td>Active</Td>
-                                                <Td>{listing.bids_count}</Td>
+                                                <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
                                                 <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
                                             </Tr>
                                         ))}
@@ -141,7 +141,7 @@ const UserDashboard = () => {
                                 <Grid templateColumns={[`repeat(${profileDisplayCols}, 1fr)`]} gap={6}>
                                     <GridItem>
                                         <Text fontSize={{ base: '17px', md: '21px' }}>Avatar</Text>
-                                        <Image src={userData?.file_url} w='100%' maxH='300px' objectFit='cover' mb={4} />
+                                        <Image src={userData?.file_url} w='100%' maxH='300px' objectFit='cover' objectPosition='top' mb={4} />
                                         <Input type='file' p={1.5} name='file_type' mb={3} onChange={handleChange} />
                                     </GridItem>
                                     <GridItem>

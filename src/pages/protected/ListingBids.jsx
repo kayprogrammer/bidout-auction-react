@@ -1,15 +1,31 @@
-import { Box, Heading, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
-import React from 'react'
-import { SubHeader } from '../../components'
+import { Box, Heading, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
+import React, { useEffect } from 'react'
+import { Spinner, SubHeader } from '../../components'
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { retrieveListingBids } from '../../features/listings/listingsSlice';
+import toast from '../toasts';
 
 const ListingBids = () => {
-    const tableElements = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    const { listingSlug } = useParams();
+
+    const { listing, bids, isLoading, message, isError } = useSelector((state) => state.listings)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(message)
+        }
+        dispatch(retrieveListingBids(listingSlug))
+    }, [isError, message, dispatch, listingSlug])
+
+    if (isLoading) return <Spinner />;
 
     return (
         <>
             <SubHeader name='My Listing Bids' backgroundColor='rgb(13, 110, 253)' />
             <Box p={{ base: '50px 30px 50px 30px', md: '50px 80px 50px 80px' }}>
-                <Heading size='md' textAlign='center' mb={6}>Brand New royal Enfield 250 CC For special Sale</Heading>
+                <Heading size='md' textAlign='center' mb={6}>{listing.name}</Heading>
                 <Box maxW='100%' overflowX='scroll'>
                     <Table variant='simple' size={{ base: 'sm', md: 'md' }}>
                         <Thead>
@@ -20,13 +36,18 @@ const ListingBids = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {tableElements.map((el) => (
-                                <Tr>
-                                    <Td>1</Td>
-                                    <Td>Kenechi Ifeanyi</Td>
-                                    <Td>$1000</Td>
+                            {bids.map((bid, i) => (
+                                <Tr key={i}>
+                                    <Td>{i + 1}</Td>
+                                    <Td>{bid.user.name}</Td>
+                                    <Td>${bid.amount}</Td>
                                 </Tr>
                             ))}
+                            <Tr>
+                                <Td colSpan={3}>
+                                    <Text fontWeight='bold' fontSize='md' color='blue' textAlign='center'>No bids for this listing yet!</Text>
+                                </Td>
+                            </Tr>
                         </Tbody>
                     </Table>
                 </Box>
