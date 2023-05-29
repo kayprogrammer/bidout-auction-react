@@ -121,6 +121,12 @@ export const listingsSlice = createSlice({
             const listing_slug = action?.payload?.slug
             const updated_listings = listings.filter(obj => obj.slug !== listing_slug)
             state.listings = updated_listings
+        },
+        reset: (state) => {
+            state.listings = []
+            state.listing = {}
+            state.categories = []
+            state.bids = []
         }
     },
     extraReducers: (builder) => {

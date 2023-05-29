@@ -2,7 +2,7 @@ import { Box, Button, Grid, GridItem, Input, InputGroup, InputLeftAddon, NumberD
 import React, { useEffect, useState } from 'react'
 import { Spinner, SubHeader } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
-import { createListing, getCategories, getListing, updateListing } from '../../features/listings/listingsSlice'
+import { createListing, getCategories, getListing, reset, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { useNavigate, useParams } from 'react-router-dom'
 import { uploadImage } from '../imageUploader'
@@ -28,16 +28,16 @@ const CreateListing = ({ type }) => {
 
   useEffect(() => {
     dispatch(getCategories()).then((e) => {
-      if (e?.payload?.status === 'success'){
+      if (e?.payload?.status === 'success') {
         const categories = e.payload.data
         if (listingSlug) {
           dispatch(getListing(listingSlug)).then((e) => {
-            if (e?.payload?.status === 'success'){
+            if (e?.payload?.status === 'success') {
               const listing = e.payload.data
               const listingCategory = categories.find(category => category.name === listing.category)
-              
+
               const closingDate = new Date(listing.closing_date)
-              const closingDateLocal = new Date(closingDate.getTime() - closingDate.getTimezoneOffset()*60000).toISOString()
+              const closingDateLocal = new Date(closingDate.getTime() - closingDate.getTimezoneOffset() * 60000).toISOString()
 
               setListingData((prevListingData) => ({
                 ...prevListingData,
@@ -67,19 +67,19 @@ const CreateListing = ({ type }) => {
   }
 
   if (isLoading && !createLoading) return <Spinner />;
-  console.log(listingData)
+
   const submitHandler = (event) => {
     event.preventDefault()
     setCreateLoading(true)
     var file = listingData.file
     listingData['closing_date'] = new Date(listingData.closing_date).toISOString()
     delete listingData['file']
-    if (!file){
+    if (!file) {
       delete listingData['file_type']
     }
 
     if (type) {
-      listingData['slug'] = listingSlug 
+      listingData['slug'] = listingSlug
     }
     dispatch(type ? updateListing(listingData) : createListing(listingData)).then((e) => {
       if (e?.payload?.status === 'success') {
@@ -88,11 +88,13 @@ const CreateListing = ({ type }) => {
           uploadImage(file, fileData.public_id, fileData.signature, fileData.timestamp).then(() => {
             setCreateLoading(false)
             toast.success(e.payload.message)
+            dispatch(reset())
             navigate("/dashboard/listings")
           })
         } else {
           setCreateLoading(false)
           toast.success(e.payload.message)
+          dispatch(reset())
           navigate("/dashboard/listings")
         }
       }
