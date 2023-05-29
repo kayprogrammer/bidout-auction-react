@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAuctioneerListings } from '../../features/listings/listingsSlice'
+import { getAuctioneerListings, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { uploadImage } from '../imageUploader'
 import { getProfile, logout, updateProfile } from '../../features/auth/authSlice'
@@ -85,6 +85,29 @@ const UserDashboard = () => {
         })
     }
 
+    const handleUpdateStatus = (event, listingSlug) => {
+        const status = event.target.textContent
+        var listingData = { slug: listingSlug, active: true }
+
+        if (status === 'Active') {
+            listingData['active'] = false
+        }
+
+        dispatch(updateListing(listingData)).then((e) => {
+            if (e?.payload?.status === 'success') {
+                if (status === 'Active') {
+                    event.target.textContent = 'Closed'
+                    event.target.style.color = 'red'
+                } else {
+                    event.target.textContent = 'Active'
+                    event.target.style.color = 'blue'
+                }
+            } else {
+                toast.error(e?.payload?.message)
+            }
+        })
+    }
+
     const loadingButtonAttrs = {
         isLoading: true,
         loadingText: 'Updating',
@@ -127,7 +150,7 @@ const UserDashboard = () => {
                                                 <Td>{i + 1}</Td>
                                                 <Td>{listing.name}</Td>
                                                 <Td>${listing.price}</Td>
-                                                <Td>Active</Td>
+                                                <Td onClick={(event) => handleUpdateStatus(event, listing.slug)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
                                                 <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
                                                 <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
                                             </Tr>

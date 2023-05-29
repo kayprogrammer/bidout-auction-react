@@ -92,6 +92,16 @@ export const createListing = createAsyncThunk('listings/post', async (listingDat
     }
 })
 
+// create listing
+export const updateListing = createAsyncThunk('listings/patch', async (listingData, thunkAPI) => {
+    try {
+        return await listingsService.updateListing(listingData);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 // Retrieve listing bids
 export const retrieveListingBids = createAsyncThunk('listings/retrieveListingBids', async (listingSlug, thunkAPI) => {
     try {
@@ -216,6 +226,15 @@ export const listingsSlice = createSlice({
                 state.isError = true;
                 state.message = action.payload
             })
+            .addCase(updateListing.fulfilled, (state, action) => {
+                state.isSuccess = true;
+                state.message = action.payload.message;
+
+            })
+            .addCase(updateListing.rejected, (state, action) => {
+                state.isError = true;
+                state.message = action.payload
+            })
             .addCase(retrieveListingBids.pending, (state) => {
                 state.isLoading = true
             })
@@ -223,7 +242,7 @@ export const listingsSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.bids = action.payload.data.bids;
-                state.listing = {name: action.payload.data.listing}
+                state.listing = { name: action.payload.data.listing }
             })
             .addCase(retrieveListingBids.rejected, (state, action) => {
                 state.isLoading = false;

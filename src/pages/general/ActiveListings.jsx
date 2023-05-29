@@ -15,20 +15,20 @@ const ActiveListings = () => {
 
     const { listings, isLoading, isError, message } = useSelector((state) => state.listings);
     const dispatch = useDispatch()
-    
+
     const { categorySlug } = useParams();
 
     useEffect(() => {
-    if (isError) {
-        toast.error(message)
-    }
-    if (categorySlug) {
-        dispatch(getListingsByCategory(categorySlug))
-    } else {
-        dispatch(getListings())
+        if (isError) {
+            toast.error(message)
+        }
+        if (categorySlug) {
+            dispatch(getListingsByCategory(categorySlug))
+        } else {
+            dispatch(getListings())
 
-    }
-    dispatch(getCategories())
+        }
+        dispatch(getCategories())
 
     }, [dispatch, isError, message, categorySlug])
 
@@ -39,7 +39,7 @@ const ActiveListings = () => {
             <SubHeader name='Active Listings' />
             <Grid mt={12} templateColumns={[`repeat(${itemsDisplayCols}, 1fr)`]} gap={8} alignItems='center' minHeight='28.7vh' p={{ base: "0px 30px 50px 30px", md: "0px 50px 50px 50px" }}>
                 {listings.map((listing, i) => (
-                    <CardListing listing={listing} key={i}/>
+                    <CardListing listing={listing} key={i} />
                 ))}
             </Grid>
         </>
