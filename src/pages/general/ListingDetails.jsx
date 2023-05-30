@@ -4,14 +4,16 @@ import { Box, Button, Card, CardBody, Flex, Grid, GridItem, Heading, Image, Numb
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import kay from '../../assets/kay.png'
 import { useDispatch, useSelector } from 'react-redux'
-import { getListing, getListingBids, updateListing } from '../../features/listings/listingsSlice'
+import { getListing, getListingBids, placeBid, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { store } from '../../app/store'
 
 const ListingDetails = () => {
     const [closed, setClosed] = useState(false)
     const [closeLoading, setCloseLoading] = useState(false)
+    const [createBidLoading, setCreateBidLoading] = useState(false)
 
+    const [bidData, setBidData] = useState({slug: "", amount:""})
     const generalItemsDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 3, lg: 3 })
     const bidsRelatedItemsDisplayCols = useBreakpointValue({ base: 1, md: 3 })
     const relatedItemsDisplayCols = useBreakpointValue({ base: 1, md: 2, lg: 3 })
@@ -55,6 +57,26 @@ const ListingDetails = () => {
         })
     }
 
+    const submitHandler = (event) => {
+        event.preventDefault()
+        setCreateBidLoading(true)
+        dispatch(placeBid(bidData)).then((e) => {
+            setCreateBidLoading(false)
+            console.log(e.payload)
+            if (e?.payload?.status === 'success') {
+                toast.success(e.payload.message)
+            } else {
+                toast.error(e.payload)
+            }
+        })
+    }
+
+    const loadingButtonAttrs = {
+        isLoading: true,
+        loadingText: 'Placing',
+        spinnerPlacement: 'start',
+    }
+
     return (
         <>
             <SubHeader name='Product Details' />
@@ -74,9 +96,9 @@ const ListingDetails = () => {
                                 <CardBody>
                                     <Text fontWeight='bold' mb={4}>Place your bid now</Text>
                                     <Text mb={3}>Bid Amount:</Text>
-                                    <form method='POST'>
+                                    <form method='POST' onSubmit={submitHandler}>
                                         <NumberInput mb={4} isDisabled={(currentUserId === listing?.listing?.auctioneer?.id || !listing?.listing?.active || closed) ? true : false}>
-                                            <NumberInputField name='price' placeholder='$0.00' required />
+                                            <NumberInputField name='amount' placeholder='$0.00' required onChange={(e) => setBidData({slug: listing?.listing?.slug, amount: e.target.value})} value={bidData.amount}/>
                                             <NumberInputStepper>
                                                 <NumberIncrementStepper />
                                                 <NumberDecrementStepper />
@@ -90,7 +112,7 @@ const ListingDetails = () => {
                                             ) : (
                                                 <>
                                                     <GridItem mb={{ base: 4, sm: 0 }}>
-                                                        <Button type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }} isDisabled={currentUserId === listing?.listing?.auctioneer?.id ? true : false}>Place bid</Button>
+                                                        <Button {...(createBidLoading && { ...loadingButtonAttrs })} type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }} isDisabled={currentUserId === listing?.listing?.auctioneer?.id ? true : false}>Place bid</Button>
                                                     </GridItem>
                                                     {currentUserId === listing?.listing?.auctioneer?.id && (
                                                         <GridItem ml={{ sm: 'auto' }}>

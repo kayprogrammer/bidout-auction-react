@@ -76,6 +76,14 @@ const retrieveListingBids = async (listingSlug) => {
     return response.data;
 }
 
-const listingsService = { getListings, getListingsByCategory, getWatchlistListings, addListingToWatchlist, getListing, getListingBids, getAuctioneerListings, getCategories, createListings, updateListing, retrieveListingBids }
+// Place bid
+const placeBid = async (bidData) => {
+    const slug = bidData.slug
+    delete bidData['slug']
+    const response = await api.post(`/listings/${slug}/bids`, bidData);
+    return response.data;
+}
+
+const listingsService = { getListings, getListingsByCategory, getWatchlistListings, addListingToWatchlist, getListing, getListingBids, getAuctioneerListings, getCategories, createListings, updateListing, retrieveListingBids, placeBid }
 
 export default listingsService;
