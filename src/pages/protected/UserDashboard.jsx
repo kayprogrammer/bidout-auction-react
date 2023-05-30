@@ -85,7 +85,7 @@ const UserDashboard = () => {
         })
     }
 
-    const handleUpdateStatus = (event, listingSlug) => {
+    const handleUpdateStatus = (event, listingSlug, timeLeftSeconds) => {
         const status = event.target.textContent
         var listingData = { slug: listingSlug, active: true }
 
@@ -93,19 +93,23 @@ const UserDashboard = () => {
             listingData['active'] = false
         }
 
-        dispatch(updateListing(listingData)).then((e) => {
-            if (e?.payload?.status === 'success') {
-                if (status === 'Active') {
-                    event.target.textContent = 'Closed'
-                    event.target.style.color = 'red'
+        if (status === 'Closed' && timeLeftSeconds < 1) {
+            toast.warning('Expired Listing')
+        } else {
+            dispatch(updateListing(listingData)).then((e) => {
+                if (e?.payload?.status === 'success') {
+                    if (status === 'Active') {
+                        event.target.textContent = 'Closed'
+                        event.target.style.color = 'red'
+                    } else {
+                        event.target.textContent = 'Active'
+                        event.target.style.color = 'blue'
+                    }
                 } else {
-                    event.target.textContent = 'Active'
-                    event.target.style.color = 'blue'
+                    toast.error(e?.payload?.message)
                 }
-            } else {
-                toast.error(e?.payload?.message)
-            }
-        })
+            })
+        }
     }
 
     const loadingButtonAttrs = {
@@ -150,7 +154,7 @@ const UserDashboard = () => {
                                                 <Td>{i + 1}</Td>
                                                 <Td>{listing.name}</Td>
                                                 <Td>${listing.price}</Td>
-                                                <Td onClick={(event) => handleUpdateStatus(event, listing.slug)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
+                                                <Td onClick={(event) => handleUpdateStatus(event, listing.slug, listing.time_left_seconds)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
                                                 <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
                                                 <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
                                             </Tr>

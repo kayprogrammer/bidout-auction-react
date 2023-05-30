@@ -53,9 +53,19 @@ export const addListingToWatchlist = createAsyncThunk('listings/addListingToWatc
 })
 
 // get listing
-export const getListing = createAsyncThunk('listings/get', async (listingId, thunkAPI) => {
+export const getListing = createAsyncThunk('listings/get', async (listingSlug, thunkAPI) => {
     try {
-        return await listingsService.getListing(listingId);
+        return await listingsService.getListing(listingSlug);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// get listing bids
+export const getListingBids = createAsyncThunk('bids/get', async (listingSlug, thunkAPI) => {
+    try {
+        return await listingsService.getListingBids(listingSlug);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
         return thunkAPI.rejectWithValue(message);
@@ -192,6 +202,16 @@ export const listingsSlice = createSlice({
                 state.isError = true;
                 state.message = action.payload
             })
+            .addCase(getListingBids.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.bids = action.payload.data;
+            })
+            .addCase(getListingBids.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload
+            })
             .addCase(getAuctioneerListings.pending, (state) => {
                 state.isLoading = true
             })
@@ -205,9 +225,6 @@ export const listingsSlice = createSlice({
                 state.isError = true;
                 state.message = action.payload
             })
-            .addCase(getCategories.pending, (state) => {
-                state.isLoading = true
-            })
             .addCase(getCategories.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
@@ -217,9 +234,6 @@ export const listingsSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload
-            })
-            .addCase(createListing.pending, (state) => {
-                state.isLoading = true
             })
             .addCase(createListing.fulfilled, (state, action) => {
                 state.isLoading = false;

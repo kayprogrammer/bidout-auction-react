@@ -2,7 +2,7 @@ import { Box, Button, Grid, GridItem, Input, InputGroup, InputLeftAddon, NumberD
 import React, { useEffect, useState } from 'react'
 import { Spinner, SubHeader } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
-import { createListing, getCategories, getListing, reset, updateListing } from '../../features/listings/listingsSlice'
+import { createListing, getCategories, getListing, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { useNavigate, useParams } from 'react-router-dom'
 import { uploadImage } from '../imageUploader'
@@ -10,6 +10,7 @@ import { uploadImage } from '../imageUploader'
 const CreateListing = ({ type }) => {
   const displayCols = useBreakpointValue({ base: 1, md: 2 })
   const [createLoading, setCreateLoading] = useState(false)
+  const [ isLoading, setIsLoading ] = useState(true)
 
   const [listingData, setListingData] = useState({
     name: "",
@@ -21,38 +22,55 @@ const CreateListing = ({ type }) => {
     file_type: null,
   })
 
-  const { categories, isLoading } = useSelector((state) => state.listings)
+  const { categories } = useSelector((state) => state.listings)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { listingSlug } = useParams();
 
   useEffect(() => {
-    dispatch(getCategories()).then((e) => {
-      if (e?.payload?.status === 'success') {
-        const categories = e.payload.data
-        if (listingSlug) {
-          dispatch(getListing(listingSlug)).then((e) => {
+    if (listingSlug) {
+      dispatch(getListing(listingSlug)).then((e) => {
+        if (e?.payload?.status === 'success') {
+          const listing = e.payload.data
+          dispatch(getCategories()).then((e) => {
             if (e?.payload?.status === 'success') {
-              const listing = e.payload.data
-              const listingCategory = categories.find(category => category.name === listing.category)
+              const categories = e.payload.data
+              const listingCategory = categories.find(category => category.name === listing?.listing?.category)
 
-              const closingDate = new Date(listing.closing_date)
+              const closingDate = new Date(listing?.listing?.closing_date)
               const closingDateLocal = new Date(closingDate.getTime() - closingDate.getTimezoneOffset() * 60000).toISOString()
 
               setListingData((prevListingData) => ({
                 ...prevListingData,
-                name: listing.name,
+                name: listing?.listing?.name,
                 category: listingCategory ? listingCategory.slug : "other",
-                price: listing.price,
+                price: listing?.listing?.price,
                 closing_date: closingDateLocal.substring(0, closingDateLocal.lastIndexOf(".")),
-                desc: listing.desc,
+                desc: listing?.listing?.desc,
 
               }))
+              setIsLoading(false)              
             }
           })
+          
         }
-      }
-    })
+      })
+    } else {
+      setIsLoading(false)
+      setListingData((prevListingData) => ({
+        ...prevListingData,
+        name: "",
+        category: "",
+        price: "",
+        closing_date: "",
+        desc: "",
+        file: null,
+        file_type: null
+
+      }))
+      dispatch(getCategories())
+    }
+    
   }, [dispatch, listingSlug])
 
   const handleChange = (e) => {
@@ -88,13 +106,11 @@ const CreateListing = ({ type }) => {
           uploadImage(file, fileData.public_id, fileData.signature, fileData.timestamp).then(() => {
             setCreateLoading(false)
             toast.success(e.payload.message)
-            dispatch(reset())
             navigate("/dashboard/listings")
           })
         } else {
           setCreateLoading(false)
           toast.success(e.payload.message)
-          dispatch(reset())
           navigate("/dashboard/listings")
         }
       }

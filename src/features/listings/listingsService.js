@@ -34,6 +34,12 @@ const getListing = async (listingId) => {
     return response.data;
 }
 
+// Retrieve bids
+const getListingBids = async (listingSlug) => {
+    const response = await api.get(`/listings/${listingSlug}/bids/`);
+    return response.data;
+}
+
 // Retrieve Auctioneer listings
 const getAuctioneerListings = async (quantity) => {
     var url = '/auctioneer/listings/'
@@ -70,6 +76,6 @@ const retrieveListingBids = async (listingSlug) => {
     return response.data;
 }
 
-const listingsService = { getListings, getListingsByCategory, getWatchlistListings, addListingToWatchlist, getListing, getAuctioneerListings, getCategories, createListings, updateListing, retrieveListingBids }
+const listingsService = { getListings, getListingsByCategory, getWatchlistListings, addListingToWatchlist, getListing, getListingBids, getAuctioneerListings, getCategories, createListings, updateListing, retrieveListingBids }
 
 export default listingsService;

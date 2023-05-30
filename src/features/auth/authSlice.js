@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from './authService';
 import toast from '../../pages/toasts'
+import jwt_decode from "jwt-decode";
 
 const initialState = {
     user: null,
@@ -108,7 +109,9 @@ export const authSlice = createSlice({
             state.otpResent = false;
         },
         refreshToken: (state, action) => {
-            state.user = action.payload
+            var userDict = action.payload
+            userDict['id'] = jwt_decode(action.payload.access)['user_id'] 
+            state.user = userDict;
         },
         resetUser: (state) => {
             state.user = null
@@ -136,7 +139,9 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.user = action.payload.data;
+                var userDict = action.payload.data
+                userDict['id'] = jwt_decode(action.payload.data.access)['user_id'] 
+                state.user = userDict;
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;

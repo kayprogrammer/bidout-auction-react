@@ -21,28 +21,31 @@ const AllUserListings = () => {
         event.target.src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'; // Replace with your fallback image link
     };
 
-    const handleUpdateStatus = (event, listingSlug) => {
+    const handleUpdateStatus = (event, listingSlug, timeLeftSeconds) => {
         const status = event.target.textContent
         var listingData = { slug: listingSlug, active: true }
 
         if (status === 'Active') {
             listingData['active'] = false
         }
-        console.log(listingData)
 
-        dispatch(updateListing(listingData)).then((e) => {
-            if (e?.payload?.status === 'success') {
-                if (status === 'Active') {
-                    event.target.textContent = 'Closed'
-                    event.target.style.color = 'red'
+        if (status === 'Closed' && timeLeftSeconds < 1) {
+            toast.warning('Expired Listing')
+        } else {
+            dispatch(updateListing(listingData)).then((e) => {
+                if (e?.payload?.status === 'success') {
+                    if (status === 'Active') {
+                        event.target.textContent = 'Closed'
+                        event.target.style.color = 'red'
+                    } else {
+                        event.target.textContent = 'Active'
+                        event.target.style.color = 'blue'
+                    }
                 } else {
-                    event.target.textContent = 'Active'
-                    event.target.style.color = 'blue'
+                    toast.error(e?.payload?.message)
                 }
-            } else {
-                toast.error(e?.payload?.message)
-            }
-        })
+            })
+        }
     }
 
     if (isLoading) return <Spinner />;
@@ -71,7 +74,7 @@ const AllUserListings = () => {
                                     <Td>{listing.name}</Td>
                                     <Td maxW='100%' w='15%'><Image src={listing.image} onError={handleListingImageError} /></Td>
                                     <Td>${listing.price}</Td>
-                                    <Td onClick={(event) => handleUpdateStatus(event, listing.slug)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
+                                    <Td onClick={(event) => handleUpdateStatus(event, listing.slug, listing.time_left_seconds)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
                                     <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
                                     <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
                                 </Tr>

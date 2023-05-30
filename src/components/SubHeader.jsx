@@ -7,7 +7,7 @@ import { pathToRegexp } from 'path-to-regexp';
 const SubHeader = ({ name, backgroundColor }) => {
   const location = useLocation()
   const currentPath = location.pathname
-  const listingPaths = ['/listings/', '/listings', '/listings/:categorySlug', '/listings/:categorySlug/']
+  const listingPaths = ['/listings/', '/listings', '/listings/categories/:categorySlug', '/listings/categories/:categorySlug/']
   // Check if the current path matches any of the specific paths
   const isMatchingPath = listingPaths.some(path => {
     const keys = [];
@@ -52,9 +52,9 @@ const SubHeader = ({ name, backgroundColor }) => {
             <Box p={7} pt={6}>
               <Button {...categoryButtonStyles}><Link to='/listings'>All</Link></Button>
               {categories.map((category, i) => (
-                <Button {...categoryButtonStyles} key={i}><Link to={`/listings/${category.slug}`}>{category.name}</Link></Button>
+                <Button {...categoryButtonStyles} key={i}><Link to={`/listings/categories/${category.slug}`}>{category.name}</Link></Button>
               ))}
-              <Button {...categoryButtonStyles}><Link to='/listings/other'>Other</Link></Button>
+              <Button {...categoryButtonStyles}><Link to='/listings/categories/other'>Other</Link></Button>
             </Box>
 
           </Card>

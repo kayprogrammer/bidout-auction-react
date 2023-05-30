@@ -6,6 +6,9 @@ const toastFunctions = {
     success: (message) => {
         showToast(message, 'success');
     },
+    warning: (message) => {
+        showToast(message, 'warning');
+    },
     error: (message) => {
         showToast(message, 'error');
     },

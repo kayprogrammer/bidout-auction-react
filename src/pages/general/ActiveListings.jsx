@@ -26,7 +26,6 @@ const ActiveListings = () => {
             dispatch(getListingsByCategory(categorySlug))
         } else {
             dispatch(getListings())
-
         }
         dispatch(getCategories())
 

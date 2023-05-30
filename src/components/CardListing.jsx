@@ -21,6 +21,8 @@ import { store } from '../app/store';
 
 const CardListing = ({ listing }) => {
   const navigate = useNavigate();
+  const currentUserId = store.getState().auth?.user?.id
+
   const buttonStyles = {
     bgColor: 'rgb(220, 53, 69)',
     color: 'white',
@@ -51,8 +53,10 @@ const CardListing = ({ listing }) => {
 
     const interval = setInterval(() => {
       const currentDate = new Date();
-      const timeDifference = serverDateLocal.getTime() - currentDate.getTime();
-
+      var timeDifference = serverDateLocal.getTime() - currentDate.getTime();
+      if (!listing.active){
+        timeDifference = 0
+      }
       if (timeDifference <= 0) {
         clearInterval(interval);
         setCountdown('Closed!!!');
@@ -101,7 +105,7 @@ const CardListing = ({ listing }) => {
   return (
     <Card width='100%'>
       <CardBody>
-        <Box role='button' className='card-img' _hover={{ transform: 'scale(1.05)' }} transitionProperty='all' onClick={() => navigate('/listings/id/')}>
+        <Box role='button' className='card-img' _hover={{ transform: 'scale(1.05)' }} transitionProperty='all' onClick={() => navigate(`/listings/${listing.slug}/`)}>
           <Image
             w='90%'
             h='16em'
@@ -133,7 +137,7 @@ const CardListing = ({ listing }) => {
             <Text ml='auto' color='rgb(220, 53, 69)' fontSize='2xl'>${listing.price}</Text>
           </Flex>
           <Flex>
-            <Button {...buttonStyles}>Place a Bid</Button>
+            <Button {...buttonStyles} isDisabled={(currentUserId === listing.auctioneer.id || !listing.active) ? true : false}>Place a Bid</Button>
             <FontAwesomeIcon icon={faHeart} style={{ marginLeft: 'auto', color: heartColour }} size='2x' role='button' onClick={handleWatchlist} />
           </Flex>
 
