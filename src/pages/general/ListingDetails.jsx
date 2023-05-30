@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Spinner, SubHeader } from '../../components'
 import { Box, Button, Card, CardBody, Flex, Grid, GridItem, Heading, Image, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text, useBreakpointValue } from '@chakra-ui/react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import kay from '../../assets/kay.png'
 import { useDispatch, useSelector } from 'react-redux'
-import { getListing, getListingBids } from '../../features/listings/listingsSlice'
+import { getListing, getListingBids, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { store } from '../../app/store'
 
 const ListingDetails = () => {
+    const [closed, setClosed] = useState(false)
+    const [closeLoading, setCloseLoading] = useState(false)
+
     const generalItemsDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 3, lg: 3 })
     const bidsRelatedItemsDisplayCols = useBreakpointValue({ base: 1, md: 3 })
     const relatedItemsDisplayCols = useBreakpointValue({ base: 1, md: 2, lg: 3 })
@@ -37,7 +40,21 @@ const ListingDetails = () => {
         event.target.src = kay; // Replace with your fallback image link
     };
 
-    if (isLoading) return <Spinner />;
+    if (isLoading || closeLoading) return <Spinner />;
+
+    const handleClose = (event) => {
+        event.preventDefault();
+        setCloseLoading(true)
+        
+        var listingData = { slug: listingSlug, active: false }
+        dispatch(updateListing(listingData)).then((e) => {
+            if(e?.payload?.status === 'success'){
+                setClosed(true)
+                setCloseLoading(false)
+            }
+        })
+    }
+
     return (
         <>
             <SubHeader name='Product Details' />
@@ -58,7 +75,7 @@ const ListingDetails = () => {
                                     <Text fontWeight='bold' mb={4}>Place your bid now</Text>
                                     <Text mb={3}>Bid Amount:</Text>
                                     <form method='POST'>
-                                        <NumberInput mb={4} isDisabled={(currentUserId === listing?.listing?.auctioneer?.id || !listing?.listing?.active) ? true : false}>
+                                        <NumberInput mb={4} isDisabled={(currentUserId === listing?.listing?.auctioneer?.id || !listing?.listing?.active || closed) ? true : false}>
                                             <NumberInputField name='price' placeholder='$0.00' required />
                                             <NumberInputStepper>
                                                 <NumberIncrementStepper />
@@ -66,21 +83,21 @@ const ListingDetails = () => {
                                             </NumberInputStepper>
                                         </NumberInput>
                                         <Grid templateColumns={[`repeat(${buttonDisplayCols}, 1fr)`]}>
-                                            {listing?.listing?.active ? (
+                                            {(!listing?.listing?.active || closed) ? (
+                                                <GridItem mb={{ base: 4, sm: 0 }}>
+                                                    <Button type='click' color='white' bgColor='rgb(220, 53, 69)' _hover={{ bg: 'red.600' }} isDisabled>Closed!!!</Button>
+                                                </GridItem>
+                                            ) : (
                                                 <>
                                                     <GridItem mb={{ base: 4, sm: 0 }}>
                                                         <Button type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }} isDisabled={currentUserId === listing?.listing?.auctioneer?.id ? true : false}>Place bid</Button>
                                                     </GridItem>
                                                     {currentUserId === listing?.listing?.auctioneer?.id && (
                                                         <GridItem ml={{ sm: 'auto' }}>
-                                                            <Button type='click' color='white' bgColor='rgb(220, 53, 69)' _hover={{ bg: 'red.600' }}>Close Auction</Button>
+                                                            <Button onClick={handleClose} type='click' color='white' bgColor='rgb(220, 53, 69)' _hover={{ bg: 'red.600' }}>Close Auction</Button>
                                                         </GridItem>
                                                     )}
                                                 </>
-                                            ) : (
-                                                <GridItem mb={{ base: 4, sm: 0 }}>
-                                                    <Button type='click' color='white' bgColor='rgb(220, 53, 69)' _hover={{ bg: 'red.600' }} isDisabled>Closed!!!</Button>
-                                                </GridItem>
                                             )}
 
                                         </Grid>
