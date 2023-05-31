@@ -10,9 +10,3 @@ build:
 
 up:
 	docker run -it -p 3000:3000 bidout-auction-react
-
-down:
-	docker-compose down
-
-show-logs:
-	docker-compose logs
