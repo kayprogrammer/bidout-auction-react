@@ -7,6 +7,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAuctioneerListings, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
+import { parseInteger } from '../../features/utils'
 
 const AllUserListings = () => {
     const navigate = useNavigate();
@@ -73,7 +74,7 @@ const AllUserListings = () => {
                                     <Td>{i + 1}</Td>
                                     <Td>{listing.name}</Td>
                                     <Td maxW='100%' w='15%'><Image src={listing.image} onError={handleListingImageError} /></Td>
-                                    <Td>${listing.price}</Td>
+                                    <Td>${parseInteger(listing.price)}</Td>
                                     <Td onClick={(event) => handleUpdateStatus(event, listing.slug, listing.time_left_seconds)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
                                     <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
                                     <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>

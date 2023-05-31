@@ -10,6 +10,7 @@ import { getAuctioneerListings, updateListing } from '../../features/listings/li
 import toast from '../toasts'
 import { uploadImage } from '../imageUploader'
 import { getProfile, logout, updateProfile } from '../../features/auth/authSlice'
+import { parseInteger } from '../../features/utils'
 
 const UserDashboard = () => {
     const [userData, setUserData] = useState({
@@ -153,7 +154,7 @@ const UserDashboard = () => {
                                             <Tr key={i}>
                                                 <Td>{i + 1}</Td>
                                                 <Td>{listing.name}</Td>
-                                                <Td>${listing.price}</Td>
+                                                <Td>${parseInteger(listing.price)}</Td>
                                                 <Td onClick={(event) => handleUpdateStatus(event, listing.slug, listing.time_left_seconds)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
                                                 <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
                                                 <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>

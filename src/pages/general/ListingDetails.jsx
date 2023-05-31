@@ -7,13 +7,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getListing, getListingBids, placeBid, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { store } from '../../app/store'
+import { parseInteger } from '../../features/utils'
 
 const ListingDetails = () => {
     const [closed, setClosed] = useState(false)
     const [closeLoading, setCloseLoading] = useState(false)
     const [createBidLoading, setCreateBidLoading] = useState(false)
 
-    const [bidData, setBidData] = useState({ slug: "", amount: "" })
+    const [bidData, setBidData] = useState({ amount: "" })
     const [highestBid, setHighestBid] = useState(null)
 
     const generalItemsDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 3, lg: 3 })
@@ -62,22 +63,17 @@ const ListingDetails = () => {
         })
     }
 
-    const parseInteger = (int) => {
-        return int?.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    }
-
     const submitHandler = (event) => {
         event.preventDefault()
         if (accessToken) {
             setCreateBidLoading(true)
-            dispatch(placeBid(bidData)).then((e) => {
+            var biddingData = bidData
+            biddingData.slug = listingSlug
+            dispatch(placeBid(biddingData)).then((e) => {
                 setCreateBidLoading(false)
                 if (e?.payload?.status === 'success') {
                     setHighestBid(parseInteger(parseFloat(bidData.amount)))
-                    setBidData({ ...bidData, amount: "" })
+                    setBidData({ amount: "" })
                     dispatch(getListingBids(listingSlug))
                     toast.success(e.payload.message)
                 } else {
@@ -117,7 +113,7 @@ const ListingDetails = () => {
                                     <Text mb={3}>Bid Amount:</Text>
                                     <form method='POST' onSubmit={submitHandler}>
                                         <NumberInput mb={4} isDisabled={(currentUserId === listing?.listing?.auctioneer?.id || !listing?.listing?.active || closed) ? true : false} value={bidData?.amount}>
-                                            <NumberInputField name='amount' placeholder='$0.00' required onChange={(e) => setBidData({ slug: listing?.listing?.slug, amount: e.target.value })} />
+                                            <NumberInputField name='amount' placeholder='$0.00' required onChange={(e) => setBidData({ amount: e.target.value })} />
                                             <NumberInputStepper>
                                                 <NumberIncrementStepper />
                                                 <NumberDecrementStepper />

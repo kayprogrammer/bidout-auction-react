@@ -9,6 +9,19 @@ import {
   Stack,
   Card,
   Flex,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react';
 
 import kay from '../assets/kay.png'
@@ -16,12 +29,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addListingToWatchlist, removeFromWatchlist } from '../features/listings/listingsSlice';
+import { addListingToWatchlist, placeBid, removeFromWatchlist } from '../features/listings/listingsSlice';
 import { store } from '../app/store';
+import { parseInteger } from '../features/utils';
+import toast from '../pages/toasts'
 
 const CardListing = ({ listing }) => {
   const navigate = useNavigate();
-  const currentUserId = store.getState().auth?.user?.id
+  const currentUser = store.getState().auth?.user
+  const currentUserId = currentUser?.id
+  const currentUserAccess = currentUser?.access
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [bidData, setBidData] = useState({ amount: "" })
+  const [createBidLoading, setCreateBidLoading] = useState(false)
+  const [highestBid, setHighestBid] = useState(null)
 
   const buttonStyles = {
     bgColor: 'rgb(220, 53, 69)',
@@ -102,48 +124,99 @@ const CardListing = ({ listing }) => {
       }
     })
   }
-  return (
-    <Card width='100%'>
-      <CardBody>
-        <Box role='button' className='card-img' _hover={{ transform: 'scale(1.05)' }} transitionProperty='all' onClick={() => navigate(`/listings/${listing.slug}/`)}>
-          <Image
-            w='90%'
-            h='16em'
-            mx='auto'
-            objectFit='cover'
-            src={listing.image}
-            onError={handleListingImageError}
-            borderRadius={15}
-          />
-          <Text
-            style={{ transform: 'translateY(-50%)', width: '67%', position: 'relative' }}
-            display='table'
-            m='0 auto'
-            color='rgb(220, 53, 69)'
-            fontWeight='bold'
-            bgColor='white'
-            mx='auto'
-            p={3}
-            textAlign='center'
-            borderTopRadius={15}
-          >{countdown}
-          </Text>
-        </Box>
-        <Stack mt='6' spacing='3'>
-          <Heading fontSize={23} mb={2}>{listing.name}</Heading>
-          <Flex>
-            <Image src={listing.auctioneer.avatar || kay} onError={handleAuctioneerImageError} alt='avatar' borderRadius='full' boxSize='35px' objectFit='cover' mr={4} />
-            <Text>By {listing.auctioneer.name}</Text>
-            <Text ml='auto' color='rgb(220, 53, 69)' fontSize='2xl'>${listing.price}</Text>
-          </Flex>
-          <Flex>
-            <Button {...buttonStyles} isDisabled={(currentUserId === listing.auctioneer.id || !listing.active) ? true : false}>Place a Bid</Button>
-            <FontAwesomeIcon icon={faHeart} style={{ marginLeft: 'auto', color: heartColour }} size='2x' role='button' onClick={handleWatchlist} />
-          </Flex>
 
-        </Stack>
-      </CardBody>
-    </Card>
+  const submitHandler = (event) => {
+    event.preventDefault()
+    setCreateBidLoading(true)
+    var biddingData = bidData
+    biddingData.slug = listing.slug
+    dispatch(placeBid(biddingData)).then((e) => {
+        setCreateBidLoading(false)
+        if (e?.payload?.status === 'success') {
+            setHighestBid(parseInteger(parseFloat(bidData.amount)))
+            setBidData({ ...bidData, amount: "" })
+            toast.success(e.payload.message)
+            onClose()
+        } else {
+            toast.error(e.payload)
+        }
+    })
+  }
+
+  const loadingButtonAttrs = {
+      isLoading: true,
+      loadingText: 'Submitting',
+      spinnerPlacement: 'start',
+  }
+
+  return (
+    <>
+      <Card width='100%'>
+        <CardBody>
+          <Box role='button' className='card-img' _hover={{ transform: 'scale(1.05)' }} transitionProperty='all' onClick={() => navigate(`/listings/${listing.slug}/`)}>
+            <Image
+              w='90%'
+              h='16em'
+              mx='auto'
+              objectFit='cover'
+              src={listing.image}
+              onError={handleListingImageError}
+              borderRadius={15}
+            />
+            <Text
+              style={{ transform: 'translateY(-50%)', width: '67%', position: 'relative' }}
+              display='table'
+              m='0 auto'
+              color='rgb(220, 53, 69)'
+              fontWeight='bold'
+              bgColor='white'
+              mx='auto'
+              p={3}
+              textAlign='center'
+              borderTopRadius={15}
+            >{countdown}
+            </Text>
+          </Box>
+          <Stack mt='6' spacing='3'>
+            <Heading fontSize={23} mb={2}>{listing.name}</Heading>
+            <Flex>
+              <Image src={listing.auctioneer.avatar || kay} onError={handleAuctioneerImageError} alt='avatar' borderRadius='full' boxSize='35px' objectFit='cover' mr={4} />
+              <Text>By {listing.auctioneer.name}</Text>
+              <Text ml='auto' color='rgb(220, 53, 69)' fontSize='2xl'>${parseInteger(listing.price)}</Text>
+            </Flex>
+            <Flex>
+              <Button onClick={currentUserAccess ? onOpen : () => navigate('/login')} {...buttonStyles} isDisabled={(currentUserId === listing.auctioneer.id || !listing.active) ? true : false}>Place a Bid</Button>
+              <FontAwesomeIcon icon={faHeart} style={{ marginLeft: 'auto', color: heartColour }} size='2x' role='button' onClick={handleWatchlist} />
+            </Flex>
+
+          </Stack>
+        </CardBody>
+      </Card>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <form method='POST' onSubmit={submitHandler}>
+            <ModalHeader>Highest Bid: {highestBid || parseInteger(listing.highest_bid)}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+            <NumberInput mb={4} value={bidData?.amount}>
+                <NumberInputField name='amount' placeholder='$0.00' required onChange={(e) => setBidData({ amount: e.target.value })} />
+                <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                </NumberInputStepper>
+            </NumberInput>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='red' mr={3} onClick={onClose}>
+                Close
+              </Button>
+              <Button {...(createBidLoading && { ...loadingButtonAttrs })} type='submit' colorScheme='blue'>Submit</Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveListingBids } from '../../features/listings/listingsSlice';
 import toast from '../toasts';
+import { parseInteger } from '../../features/utils';
 
 const ListingBids = () => {
     const { listingSlug } = useParams();
@@ -36,18 +37,21 @@ const ListingBids = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {bids.map((bid, i) => (
-                                <Tr key={i}>
-                                    <Td>{i + 1}</Td>
-                                    <Td>{bid.user.name}</Td>
-                                    <Td>${bid.amount}</Td>
+                            {bids?.length > 0 ?
+                                bids?.map((bid, i) => (
+                                    <Tr key={i}>
+                                        <Td>{i + 1}</Td>
+                                        <Td>{bid.user.name}</Td>
+                                        <Td>${parseInteger(bid.amount)}</Td>
+                                    </Tr>
+                                ))
+                            : (
+                                <Tr>
+                                    <Td colSpan={3}>
+                                        <Text fontWeight='bold' fontSize='md' color='blue' textAlign='center'>No bids for this listing yet!</Text>
+                                    </Td>
                                 </Tr>
-                            ))}
-                            <Tr>
-                                <Td colSpan={3}>
-                                    <Text fontWeight='bold' fontSize='md' color='blue' textAlign='center'>No bids for this listing yet!</Text>
-                                </Td>
-                            </Tr>
+                            )}
                         </Tbody>
                     </Table>
                 </Box>
