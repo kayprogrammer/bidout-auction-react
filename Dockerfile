@@ -1,19 +1,23 @@
-ARG NODE_VERSION=16.18-alpine
+# Use an official Node.js runtime as the base image
+FROM node:14-alpine
 
-FROM node:${NODE_VERSION} as node
+# Set the working directory inside the container
+WORKDIR /app
 
-FROM node as client-local-build
+# Copy the package.json and package-lock.json files to the working directory
+COPY package*.json ./
 
-ARG APP_HOME=/app
-
-WORKDIR ${APP_HOME}
-
-COPY ./package*.json .
-
+# Install the app dependencies
 RUN npm install
 
-RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+# Copy the entire app to the working directory
+COPY . .
 
-COPY . ${APP_HOME}
+# Build the app
+RUN npm run build
 
+# Expose the port that the app will run on
+EXPOSE 3000
+
+# Start the app
 CMD ["npm", "start"]
