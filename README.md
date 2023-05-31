@@ -26,3 +26,15 @@
 ```bash
     $ npm start
 ```
+
+#### With Docker
+- Docker Direct
+```bash
+    $ docker build -t bidout-auction-react .
+    $ docker run -it -p 3000:3000 bidout-auction-react
+```
+- Docker With Makefile
+```bash
+    $ make build
+    $ make up 
+```
