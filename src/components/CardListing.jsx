@@ -54,7 +54,7 @@ const CardListing = ({ listing }) => {
     const interval = setInterval(() => {
       const currentDate = new Date();
       var timeDifference = serverDateLocal.getTime() - currentDate.getTime();
-      if (!listing.active){
+      if (!listing.active) {
         timeDifference = 0
       }
       if (timeDifference <= 0) {

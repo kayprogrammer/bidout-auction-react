@@ -13,14 +13,19 @@ const ListingDetails = () => {
     const [closeLoading, setCloseLoading] = useState(false)
     const [createBidLoading, setCreateBidLoading] = useState(false)
 
-    const [bidData, setBidData] = useState({slug: "", amount:""})
+    const [bidData, setBidData] = useState({ slug: "", amount: "" })
+    const [highestBid, setHighestBid] = useState(null)
+
     const generalItemsDisplayCols = useBreakpointValue({ base: 1, sm: 1, md: 3, lg: 3 })
     const bidsRelatedItemsDisplayCols = useBreakpointValue({ base: 1, md: 3 })
     const relatedItemsDisplayCols = useBreakpointValue({ base: 1, md: 2, lg: 3 })
     const buttonDisplayCols = useBreakpointValue({ base: 1, sm: 2 })
 
     const { listingSlug } = useParams();
-    const currentUserId = store.getState().auth?.user?.id
+    const currentUser = store.getState().auth?.user
+    const currentUserId = currentUser?.id
+    const accessToken = currentUser?.access
+
     const { listing, bids, isLoading, isError, message } = useSelector((state) => state.listings)
 
     const navigate = useNavigate();
@@ -39,7 +44,7 @@ const ListingDetails = () => {
     };
 
     const handleAuctioneerImageError = (event) => {
-        event.target.src = kay; // Replace with your fallback image link
+        event.target.src = kay;
     };
 
     if (isLoading || closeLoading) return <Spinner />;
@@ -47,28 +52,42 @@ const ListingDetails = () => {
     const handleClose = (event) => {
         event.preventDefault();
         setCloseLoading(true)
-        
+
         var listingData = { slug: listingSlug, active: false }
         dispatch(updateListing(listingData)).then((e) => {
-            if(e?.payload?.status === 'success'){
+            if (e?.payload?.status === 'success') {
                 setClosed(true)
                 setCloseLoading(false)
             }
         })
     }
 
+    const parseInteger = (int) => {
+        return int?.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
     const submitHandler = (event) => {
         event.preventDefault()
-        setCreateBidLoading(true)
-        dispatch(placeBid(bidData)).then((e) => {
-            setCreateBidLoading(false)
-            console.log(e.payload)
-            if (e?.payload?.status === 'success') {
-                toast.success(e.payload.message)
-            } else {
-                toast.error(e.payload)
-            }
-        })
+        if (accessToken) {
+            setCreateBidLoading(true)
+            dispatch(placeBid(bidData)).then((e) => {
+                setCreateBidLoading(false)
+                if (e?.payload?.status === 'success') {
+                    setHighestBid(parseInteger(parseFloat(bidData.amount)))
+                    setBidData({ ...bidData, amount: "" })
+                    dispatch(getListingBids(listingSlug))
+                    toast.success(e.payload.message)
+                } else {
+                    toast.error(e.payload)
+                }
+            })
+        } else {
+            navigate('/login')
+            toast.warning('Login first!')
+        }
     }
 
     const loadingButtonAttrs = {
@@ -90,15 +109,15 @@ const ListingDetails = () => {
                         <GridItem colSpan={2} padding={6} maxW='100%'>
                             <Heading fontSize='1.5em'>{listing?.listing?.name}</Heading>
                             <Text mt={2}>{listing?.listing?.desc}</Text>
-                            <Text fontSize={20} mt={4} display='flex'>Bidding Price: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${listing?.listing?.price}</Text></Text>
-                            <Text fontSize={20} mb={4} display='flex'>Highest Bid: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${listing?.listing?.highest_bid}</Text></Text>
+                            <Text fontSize={20} mt={4} display='flex'>Bidding Price: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${parseInteger(listing?.listing?.price)}</Text></Text>
+                            <Text fontSize={20} mb={4} display='flex'>Highest Bid: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${highestBid || parseInteger(listing?.listing?.highest_bid)}</Text></Text>
                             <Card bgColor='rgb(248, 249, 250)'>
                                 <CardBody>
                                     <Text fontWeight='bold' mb={4}>Place your bid now</Text>
                                     <Text mb={3}>Bid Amount:</Text>
                                     <form method='POST' onSubmit={submitHandler}>
-                                        <NumberInput mb={4} isDisabled={(currentUserId === listing?.listing?.auctioneer?.id || !listing?.listing?.active || closed) ? true : false}>
-                                            <NumberInputField name='amount' placeholder='$0.00' required onChange={(e) => setBidData({slug: listing?.listing?.slug, amount: e.target.value})} value={bidData.amount}/>
+                                        <NumberInput mb={4} isDisabled={(currentUserId === listing?.listing?.auctioneer?.id || !listing?.listing?.active || closed) ? true : false} value={bidData?.amount}>
+                                            <NumberInputField name='amount' placeholder='$0.00' required onChange={(e) => setBidData({ slug: listing?.listing?.slug, amount: e.target.value })} />
                                             <NumberInputStepper>
                                                 <NumberIncrementStepper />
                                                 <NumberDecrementStepper />
@@ -140,7 +159,7 @@ const ListingDetails = () => {
                                             <Image src={bid.user.avatar || kay} onError={handleAuctioneerImageError} alt='photo' borderRadius='full' boxSize='35px' objectFit='cover' />
                                             <Box>
                                                 <Text fontSize='lg' fontWeight='bold' ml={6}>{bid.user.name}</Text>
-                                                <Text fontSize='lg' fontWeight='bold' ml={6}>Bid Price: ${bid.amount}</Text>
+                                                <Text fontSize='lg' fontWeight='bold' ml={6}>Bid Price: ${parseInteger(bid.amount)}</Text>
                                             </Box>
                                         </Flex>
                                     </CardBody>
