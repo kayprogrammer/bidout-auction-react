@@ -44,4 +44,4 @@
 ## Live Urls
 #### React Application (Live): [Bidout Auction](https://bidout.netlify.app) 
 #### API Docs (Live): [Documentation](https://bidout-sanic-api.cleverapps.io) 
-![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/logo.webp?raw=true)
+![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/display.png?raw=true)
