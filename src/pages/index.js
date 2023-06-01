@@ -2,6 +2,7 @@ export { default as Home } from './general/Home';
 export { default as ActiveListings } from './general/ActiveListings';
 export { default as WatchList } from './general/WatchList';
 export { default as ListingDetails } from './general/ListingDetails';
+export { default as NotFound } from './general/NotFound';
 
 export { default as PublicRoute } from './public/PublicRoute';
 export { default as SignUp } from './public/SignUp';

@@ -10,6 +10,7 @@ const initialState = {
     isLoading: false,
     isSuccess: false,
     message: '',
+    statusCode: null,
 }
 
 // get listings
@@ -27,8 +28,9 @@ export const getListingsByCategory = createAsyncThunk('listings/getByCategory', 
     try {
         return await listingsService.getListingsByCategory(categorySlug);
     } catch (error) {
+        const status = error.response.status
         const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
-        return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue({status: status, message: message});
     }
 })
 
@@ -57,8 +59,9 @@ export const getListing = createAsyncThunk('listings/get', async (listingSlug, t
     try {
         return await listingsService.getListing(listingSlug);
     } catch (error) {
+        const status = error.response.status
         const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
-        return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue({status: status, message: message});
     }
 })
 
@@ -171,11 +174,11 @@ export const listingsSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.listings = action.payload.data;
+                state.statusCode = null;
             })
             .addCase(getListingsByCategory.rejected, (state, action) => {
                 state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload
+                state.statusCode = action.payload.status;
             })
             .addCase(getWatchlistListings.pending, (state) => {
                 state.isLoading = true
@@ -206,11 +209,11 @@ export const listingsSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.listing = action.payload.data;
+                state.statusCode = null // Status code can be used for the entire stuff anyway
             })
             .addCase(getListing.rejected, (state, action) => {
                 state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload
+                state.statusCode = action.payload.status
             })
             .addCase(getListingBids.fulfilled, (state, action) => {
                 state.isLoading = false;

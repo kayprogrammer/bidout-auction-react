@@ -8,11 +8,13 @@ import { getListing, getListingBids, placeBid, updateListing } from '../../featu
 import toast from '../toasts'
 import { store } from '../../app/store'
 import { handleAuctioneerImageError, handleListingImageError, parseInteger } from '../../features/utils'
+import NotFound from './NotFound'
 
 const ListingDetails = () => {
     const [closed, setClosed] = useState(false)
     const [closeLoading, setCloseLoading] = useState(false)
     const [createBidLoading, setCreateBidLoading] = useState(false)
+    const [notFoundError, setNotFoundError] = useState(false)
 
     const [bidData, setBidData] = useState({ amount: "" })
     const [highestBid, setHighestBid] = useState(null)
@@ -27,18 +29,24 @@ const ListingDetails = () => {
     const currentUserId = currentUser?.id
     const accessToken = currentUser?.access
 
-    const { listing, bids, isLoading, isError, message } = useSelector((state) => state.listings)
+    const { listing, bids, isLoading, message, statusCode } = useSelector((state) => state.listings)
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (isError) {
-            toast.error(message)
+        if (statusCode === 404) {
+            setNotFoundError(true)
+        } else {
+            setNotFoundError(false)
         }
-        dispatch(getListing(listingSlug))
-        dispatch(getListingBids(listingSlug))
-    }, [dispatch, listingSlug, isError, message])
+
+        dispatch(getListing(listingSlug)).then((e) => {
+            if (e?.payload?.status === 'success'){
+                dispatch(getListingBids(listingSlug))
+            }
+        })
+    }, [dispatch, listingSlug, message, statusCode])
 
     if (isLoading || closeLoading) return <Spinner />;
 
@@ -83,6 +91,8 @@ const ListingDetails = () => {
         loadingText: 'Placing',
         spinnerPlacement: 'start',
     }
+
+    if (notFoundError) return <NotFound />;
 
     return (
         <>

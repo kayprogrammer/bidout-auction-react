@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Grid,
     GridItem,
@@ -11,9 +11,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCategories, getListings, getListingsByCategory } from '../../features/listings/listingsSlice';
 import toast from '../toasts';
 import { useParams } from 'react-router-dom';
+import NotFound from './NotFound';
 
 const ActiveListings = () => {
     const itemsDisplayCols = useBreakpointValue({ base: 1, md: 2, lg: 3 })
+    const [notFoundError, setNotFoundError] = useState(false)
 
     const { listings, isLoading, isError, message } = useSelector((state) => state.listings);
     const dispatch = useDispatch()
@@ -25,8 +27,15 @@ const ActiveListings = () => {
             toast.error(message)
         }
         if (categorySlug) {
-            dispatch(getListingsByCategory(categorySlug))
+            dispatch(getListingsByCategory(categorySlug)).then((e) => {
+                if (e?.payload?.status === 404) {
+                    setNotFoundError(true)
+                } else {
+                    setNotFoundError(false)
+                }
+            })
         } else {
+            setNotFoundError(false)
             dispatch(getListings())
         }
         dispatch(getCategories())
@@ -34,6 +43,8 @@ const ActiveListings = () => {
     }, [dispatch, isError, message, categorySlug])
 
     if (isLoading) return <Spinner />;
+
+    if (notFoundError) return <NotFound />;
 
     return (
         <>

@@ -6,7 +6,7 @@ import {
 } from '@chakra-ui/react';
 import './App.css'
 import { Header, Footer } from './components'
-import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, ProtectedRoute, PublicRoute } from './pages';
+import { Home, ActiveListings, SignUp, Login, PasswordResetRequest, PasswordReset, CreateListing, ListingDetails, UserDashboard, AllUserListings, ListingBids, WatchList, VerifyActivationOtp, ProtectedRoute, PublicRoute, NotFound } from './pages';
 import { store } from './app/store';
 import interceptors from "../src/features/interceptors"
 import CookieConsent from "react-cookie-consent";
@@ -44,6 +44,8 @@ const App = () => {
             <Route path="/dashboard/listings/:listingSlug/bids" element={<ProtectedRoute Component={ListingBids} />} />
             <Route path="/create-listing" element={<ProtectedRoute Component={CreateListing} />} />
             <Route path="/dashboard/listings/:listingSlug/update" element={<ProtectedRoute Component={CreateListing} type='update' />} />
+
+            <Route path='*' element={<NotFound />}/>
           </Routes>
         </div>
         <Footer />
