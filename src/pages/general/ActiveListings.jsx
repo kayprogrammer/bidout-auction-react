@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import {
     Grid,
+    GridItem,
+    Text,
     useBreakpointValue,
 } from '@chakra-ui/react';
 
@@ -37,9 +39,15 @@ const ActiveListings = () => {
         <>
             <SubHeader name='Active Listings' />
             <Grid mt={12} templateColumns={[`repeat(${itemsDisplayCols}, 1fr)`]} gap={8} alignItems='center' minHeight='28.7vh' p={{ base: "0px 30px 50px 30px", md: "0px 50px 50px 50px" }}>
-                {listings.map((listing, i) => (
-                    <CardListing listing={listing} key={i} />
-                ))}
+                {(categorySlug && listings?.length < 1) ? (
+                    <GridItem textAlign='center' colSpan={3}>
+                        <Text fontSize='xl' fontWeight='bold' color='blue'>No listings in this category yet.</Text>
+                    </GridItem>
+                ) :
+                    listings.map((listing, i) => (
+                        <CardListing listing={listing} key={i} />
+                    ))
+                }
             </Grid>
         </>
     )

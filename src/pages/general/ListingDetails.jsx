@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getListing, getListingBids, placeBid, updateListing } from '../../features/listings/listingsSlice'
 import toast from '../toasts'
 import { store } from '../../app/store'
-import { parseInteger } from '../../features/utils'
+import { handleAuctioneerImageError, handleListingImageError, parseInteger } from '../../features/utils'
 
 const ListingDetails = () => {
     const [closed, setClosed] = useState(false)
@@ -39,14 +39,6 @@ const ListingDetails = () => {
         dispatch(getListing(listingSlug))
         dispatch(getListingBids(listingSlug))
     }, [dispatch, listingSlug, isError, message])
-
-    const handleListingImageError = (event) => {
-        event.target.src = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'; // Replace with your fallback image link
-    };
-
-    const handleAuctioneerImageError = (event) => {
-        event.target.src = kay;
-    };
 
     if (isLoading || closeLoading) return <Spinner />;
 
@@ -99,14 +91,14 @@ const ListingDetails = () => {
                 <Card>
                     <Grid templateColumns={[`repeat(${generalItemsDisplayCols}, 1fr)`]}>
                         <GridItem colSpan={1} maxW='100%' padding={5} borderRight={{ md: '2px solid gainsboro' }} borderBottom={{ base: '2px solid gainsboro', md: "none" }}>
-                            <Image alt='auction-img' src={listing?.listing?.image} onError={handleListingImageError} />
+                            <Image maxH='60%' w='100%' objectFit='cover' alt='auction-img' src={listing?.listing?.image} onError={handleListingImageError} />
                         </GridItem>
 
                         <GridItem colSpan={2} padding={6} maxW='100%'>
                             <Heading fontSize='1.5em'>{listing?.listing?.name}</Heading>
                             <Text mt={2}>{listing?.listing?.desc}</Text>
-                            <Text fontSize={20} mt={4} display='flex'>Bidding Price: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${parseInteger(listing?.listing?.price)}</Text></Text>
-                            <Text fontSize={20} mb={4} display='flex'>Highest Bid: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${highestBid || parseInteger(listing?.listing?.highest_bid)}</Text></Text>
+                            <Heading fontSize={20} mt={4} display='flex'>Bidding Price: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${parseInteger(listing?.listing?.price)}</Text></Heading>
+                            <Heading fontSize={20} mb={4} display='flex'>Highest Bid: <Text ml={2} color='rgb(220, 53, 69)' fontSize={20}> ${highestBid || parseInteger(listing?.listing?.highest_bid)}</Text></Heading>
                             <Card bgColor='rgb(248, 249, 250)'>
                                 <CardBody>
                                     <Text fontWeight='bold' mb={4}>Place your bid now</Text>

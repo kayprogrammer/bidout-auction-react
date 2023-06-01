@@ -1,4 +1,6 @@
-# BidOut Auction React (WORK IN PROGRESS)
+# BidOut Auction React
+
+#### Related Repo - [Bidout Auction API With Sanic](https://github.com/kayprogrammer/bidout-auction-v2)
 
 ![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/logo.webp?raw=true)
 
@@ -38,3 +40,8 @@
     $ make build
     $ make up 
 ```
+
+## Live Urls
+#### React Application (Live): [Bidout Auction](https://bidout.netlify.app) 
+#### API Docs (Live): [Documentation](https://bidout-sanic-api.cleverapps.io) 
+![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/logo.webp?raw=true)
