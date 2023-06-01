@@ -6,11 +6,13 @@ import { createListing, getCategories, getListing, updateListing } from '../../f
 import toast from '../toasts'
 import { useNavigate, useParams } from 'react-router-dom'
 import { uploadImage } from '../imageUploader'
+import NotFound from '../general/NotFound'
 
 const CreateListing = ({ type }) => {
   const displayCols = useBreakpointValue({ base: 1, md: 2 })
   const [createLoading, setCreateLoading] = useState(false)
   const [ isLoading, setIsLoading ] = useState(true)
+  const [notFoundError, setNotFoundError] = useState(false)
 
   const [listingData, setListingData] = useState({
     name: "",
@@ -31,6 +33,7 @@ const CreateListing = ({ type }) => {
     if (listingSlug) {
       dispatch(getListing(listingSlug)).then((e) => {
         if (e?.payload?.status === 'success') {
+          setNotFoundError(false)
           const listing = e.payload.data
           dispatch(getCategories()).then((e) => {
             if (e?.payload?.status === 'success') {
@@ -53,9 +56,16 @@ const CreateListing = ({ type }) => {
             }
           })
           
+        } else if (e?.payload?.status === 404) {
+          setNotFoundError(true)
+          setIsLoading(false)
+        } else {
+          setNotFoundError(false)
+          setIsLoading(false)
         }
       })
     } else {
+      setNotFoundError(false)
       setIsLoading(false)
       setListingData((prevListingData) => ({
         ...prevListingData,
@@ -122,6 +132,8 @@ const CreateListing = ({ type }) => {
     loadingText: type ? 'Updating' : 'Creating',
     spinnerPlacement: 'start',
   }
+
+  if (notFoundError) return <NotFound />;
 
   return (
     <>

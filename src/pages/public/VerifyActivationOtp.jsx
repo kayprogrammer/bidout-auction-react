@@ -74,7 +74,7 @@ const VerifyActivationOtp = () => {
                                 w='100%'
                             >Submit
                             </Button>
-                            <Text mt={4} display='flex'><Text role='button' color='rgb(220, 53, 69)' fontWeight='bold' mr={1} onClick={() => { dispatch(resendActivationEmail({ "email": user?.email })) }}>Click Here!</Text> to get new otp</Text>
+                            <Heading mt={4} fontSize={14} display='flex'><Text role='button' color='rgb(220, 53, 69)' fontWeight='bold' mr={1} onClick={() => { dispatch(resendActivationEmail({ "email": user?.email })) }}>Click Here!</Text> to get new otp</Heading>
                         </form>
                     </CardBody>
                 </Card>

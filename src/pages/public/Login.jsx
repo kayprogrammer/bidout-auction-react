@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { SubHeader } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from '../toasts'
-import { login } from '../../features/auth/authSlice'
+import { login, resendActivationEmail, updateUserState } from '../../features/auth/authSlice'
 
 const Login = () => {
     const [userData, setUserData] = useState({
@@ -27,6 +27,20 @@ const Login = () => {
             if (e?.payload?.status === 'success') {
                 navigate("/dashboard")
                 toast.success(e.payload.message)
+            } else {
+                const errMsg = e?.payload
+                if (errMsg === 'Verify your email first'){
+                    const emailData = {email: userData.email}
+                    dispatch(updateUserState(emailData))
+                    dispatch(resendActivationEmail(emailData)).then((e) => {
+                        if(e?.payload?.status === 'success'){
+                            navigate('/verify-activation-otp')
+                        }
+                    })
+                } else {
+                    toast.error(errMsg)
+                }
+
             }
         })
     }

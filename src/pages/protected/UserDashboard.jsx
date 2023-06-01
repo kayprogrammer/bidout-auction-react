@@ -162,7 +162,11 @@ const UserDashboard = () => {
                                         ))}
                                     </Tbody>
                                 </Table>
-                                <Text fontWeight='bold' fontSize='sm' color='blue' role='button' mt={4} textAlign='center' onClick={() => navigate('/dashboard/listings')}>All listings!</Text>
+                                {listings?.length > 0 ? (
+                                    <Text fontWeight='bold' fontSize='sm' color='blue' role='button' mt={4} textAlign='center' onClick={() => navigate('/dashboard/listings')}>All listings!</Text>
+                                ) : (
+                                    <Text fontWeight='bold' fontSize='sm' color='blue' mt={4} textAlign='center'>You don't have any listings yet!</Text>
+                                )}
                             </>
                         ) : (
                             <form method='POST' onSubmit={submitHandler}>

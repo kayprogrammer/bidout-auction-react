@@ -75,7 +75,7 @@ const PasswordReset = () => {
                             <Input minLength={8} type='password' name='password' value={userData.password} onChange={handleChange} mb={6} required />
 
                             <Button {...((isLoading && !otpResent) && { ...loadingButtonAttrs })} type='submit' color='white' bgColor='rgb(25, 135, 84)' _hover={{ bg: 'green.600' }} w='100%'>Submit</Button>
-                            <Text mt={4} display='flex'><Text role='button' color='rgb(220, 53, 69)' fontWeight='bold' mr={1} onClick={() => { dispatch(requestPasswordReset({ "email": user?.email })) }}>Click Here!</Text> to get new otp</Text>
+                            <Heading fontSize={14} mt={4} display='flex'><Text role='button' color='rgb(220, 53, 69)' fontWeight='bold' mr={1} onClick={() => { dispatch(requestPasswordReset({ "email": user?.email })) }}>Click Here!</Text> to get new otp</Heading>
                             <Text textAlign='center' mt='2' mb={10}><Link to='/login' style={{ color: 'rgb(220, 53, 69)', fontWeight: 'bold' }}>Back to Login</Link></Text>
                         </form>
                     </CardBody>

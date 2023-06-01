@@ -1,4 +1,4 @@
-import { Box, Image, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import { Box, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { Spinner, SubHeader } from '../../components'
 import { Link, useNavigate } from 'react-router-dom'
@@ -69,17 +69,23 @@ const AllUserListings = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {listings.map((listing, i) => (
-                                <Tr key={i}>
-                                    <Td>{i + 1}</Td>
-                                    <Td>{listing.name}</Td>
-                                    <Td maxW='100%' w='15%'><Image src={listing.image} onError={handleListingImageError} /></Td>
-                                    <Td>${parseInteger(listing.price)}</Td>
-                                    <Td onClick={(event) => handleUpdateStatus(event, listing.slug, listing.time_left_seconds)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
-                                    <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
-                                    <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
-                                </Tr>
-                            ))}
+                            {listings?.length > 0 ?
+                                listings.map((listing, i) => (
+                                    <Tr key={i}>
+                                        <Td>{i + 1}</Td>
+                                        <Td>{listing.name}</Td>
+                                        <Td maxW='100%' w='15%'><Image src={listing.image} onError={handleListingImageError} /></Td>
+                                        <Td>${parseInteger(listing.price)}</Td>
+                                        <Td onClick={(event) => handleUpdateStatus(event, listing.slug, listing.time_left_seconds)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
+                                        <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
+                                        <Td role='button' onClick={() => navigate(`/dashboard/listings/${listing.slug}/update`)}><FontAwesomeIcon icon={faEdit} /></Td>
+                                    </Tr>
+                                ))
+                            : (
+                                <Td colSpan={7}>
+                                    <Text fontWeight='bold' fontSize='sm' color='blue' mt={4} textAlign='center'>You don't have any listings yet!</Text>
+                                </Td>
+                            )}
                         </Tbody>
                     </Table>
                 </Box>

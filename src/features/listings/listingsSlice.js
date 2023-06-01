@@ -120,8 +120,9 @@ export const retrieveListingBids = createAsyncThunk('authBids/get', async (listi
     try {
         return await listingsService.retrieveListingBids(listingSlug);
     } catch (error) {
+        const status = error.response.status
         const message = (error.response && error.response.data && error.response.data.data) || error.response.data.message || error.toString();
-        return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue({status: status, message: message});
     }
 })
 
@@ -276,11 +277,11 @@ export const listingsSlice = createSlice({
                 state.isSuccess = true;
                 state.bids = action.payload.data.bids;
                 state.listing = { name: action.payload.data.listing }
+                state.statusCode = null
             })
             .addCase(retrieveListingBids.rejected, (state, action) => {
                 state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload
+                state.statusCode = action.payload.status
             })
     },
 })

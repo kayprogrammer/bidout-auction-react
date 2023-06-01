@@ -1,26 +1,33 @@
 import { Box, Heading, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Spinner, SubHeader } from '../../components'
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { retrieveListingBids } from '../../features/listings/listingsSlice';
-import toast from '../toasts';
 import { parseInteger } from '../../features/utils';
+import NotFound from '../general/NotFound';
 
 const ListingBids = () => {
     const { listingSlug } = useParams();
+    const [notFoundError, setNotFoundError] = useState(false)
 
-    const { listing, bids, isLoading, message, isError } = useSelector((state) => state.listings)
+
+    const { listing, bids, isLoading } = useSelector((state) => state.listings)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (isError) {
-            toast.error(message)
-        }
-        dispatch(retrieveListingBids(listingSlug))
-    }, [isError, message, dispatch, listingSlug])
+        dispatch(retrieveListingBids(listingSlug)).then((e) => {
+            if (e?.payload?.status === 404){
+                setNotFoundError(true)
+            } else {
+                setNotFoundError(false)
+            }
+        })
+    }, [dispatch, listingSlug])
 
     if (isLoading) return <Spinner />;
+
+    if (notFoundError) return <NotFound />;
 
     return (
         <>

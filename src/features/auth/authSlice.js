@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from './authService';
-import toast from '../../pages/toasts'
 import jwt_decode from "jwt-decode";
 
 const initialState = {
@@ -115,6 +114,9 @@ export const authSlice = createSlice({
         },
         resetUser: (state) => {
             state.user = null
+        },
+        updateUserState: (state, action) => {
+            state.user = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -145,9 +147,7 @@ export const authSlice = createSlice({
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
-                state.isError = true;
                 state.user = null;
-                toast.error(action.payload)
             })
             .addCase(logout.pending, (state) => {
                 state.isLoading = true
@@ -240,6 +240,6 @@ export const authSlice = createSlice({
     },
 })
 
-export const { reset, refreshToken, resetUser } = authSlice.actions;
+export const { reset, refreshToken, resetUser, updateUserState } = authSlice.actions;
 
 export default authSlice.reducer;
