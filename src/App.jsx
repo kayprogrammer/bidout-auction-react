@@ -11,7 +11,6 @@ import { store } from './app/store';
 import interceptors from "../src/features/interceptors"
 import CookieConsent from "react-cookie-consent";
 
-
 const App = () => {
   document.title = "Kay's Auction House"
   const navigate = useNavigate()
