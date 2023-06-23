@@ -121,6 +121,9 @@ export const authSlice = createSlice({
         },
         updateGuestUser: (state, action) => {
             state.guestUser = action.payload
+        },
+        resetGuestUser: (state) => {
+            state.guestUser = null
         }
     },
     extraReducers: (builder) => {
@@ -244,6 +247,6 @@ export const authSlice = createSlice({
     },
 })
 
-export const { reset, refreshToken, resetUser, updateUserState, updateGuestUser } = authSlice.actions;
+export const { reset, refreshToken, resetUser, updateUserState, updateGuestUser, resetGuestUser } = authSlice.actions;
 
 export default authSlice.reducer;
