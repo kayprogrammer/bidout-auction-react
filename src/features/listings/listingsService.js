@@ -30,13 +30,13 @@ const addListingToWatchlist = async (listingData) => {
 
 // Retrieve single listing
 const getListing = async (listingId) => {
-    const response = await api.get(`/listings/${listingId}/`);
+    const response = await api.get(`/listings/detail/${listingId}/`);
     return response.data;
 }
 
 // Retrieve bids
 const getListingBids = async (listingSlug) => {
-    const response = await api.get(`/listings/${listingSlug}/bids/`);
+    const response = await api.get(`/listings/detail/${listingSlug}/bids/`);
     return response.data;
 }
 
@@ -80,7 +80,7 @@ const retrieveListingBids = async (listingSlug) => {
 const placeBid = async (bidData) => {
     const slug = bidData.slug
     delete bidData['slug']
-    const response = await api.post(`/listings/${slug}/bids`, bidData);
+    const response = await api.post(`/listings/detail/${slug}/bids`, bidData);
     return response.data;
 }
 
