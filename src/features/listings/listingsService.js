@@ -66,7 +66,7 @@ const createListings = async (listingData) => {
 const updateListing = async (listingData) => {
     const slug = listingData.slug
     delete listingData['slug']
-    const response = await api.patch(`/auctioneer/listings/${slug}`, listingData);
+    const response = await api.patch(`/auctioneer/listings/${slug}/`, listingData);
     return response.data;
 }
 
@@ -80,7 +80,7 @@ const retrieveListingBids = async (listingSlug) => {
 const placeBid = async (bidData) => {
     const slug = bidData.slug
     delete bidData['slug']
-    const response = await api.post(`/listings/detail/${slug}/bids`, bidData);
+    const response = await api.post(`/listings/detail/${slug}/bids/`, bidData);
     return response.data;
 }
 
