@@ -1,7 +1,14 @@
-# BidOut Auction React 2
+# BidOut Auction React
 
-#### Related Repo - [Bidout Auction API With Litestar](https://github.com/kayprogrammer/bidout-auction-v3)
-#### This repo is same as [Bidout Auction React](https://github.com/kayprogrammer/bidout-auction-react). But guest users was handled differently.
+#### Related Repos 
+    * [Bidout Auction API With Sanic](https://github.com/kayprogrammer/bidout-auction-v2)
+    * [Bidout Auction API With Litestar](https://github.com/kayprogrammer/bidout-auction-v3)
+    * [Bidout Auction API With Django Rest Framework](https://github.com/kayprogrammer/bidout-auction-v4)
+    * [Bidout Auction API With Django Ninja](https://github.com/kayprogrammer/bidout-auction-v5)
+    * [Bidout Auction API With FastAPI](https://github.com/kayprogrammer/bidout-auction-v6)
+    * [Bidout Auction API With Go Fiber](https://github.com/kayprogrammer/bidout-auction-v7)
+
+
 
 ![alt text](https://github.com/kayprogrammer/bidout-auction-react2/blob/main/display/logo.webp?raw=true)
 
