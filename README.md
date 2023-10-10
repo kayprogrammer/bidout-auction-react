@@ -1,16 +1,16 @@
 # BidOut Auction React
 
 #### Related Repos 
-    * [Bidout Auction API With Sanic](https://github.com/kayprogrammer/bidout-auction-v2)
-    * [Bidout Auction API With Litestar](https://github.com/kayprogrammer/bidout-auction-v3)
-    * [Bidout Auction API With Django Rest Framework](https://github.com/kayprogrammer/bidout-auction-v4)
-    * [Bidout Auction API With Django Ninja](https://github.com/kayprogrammer/bidout-auction-v5)
-    * [Bidout Auction API With FastAPI](https://github.com/kayprogrammer/bidout-auction-v6)
-    * [Bidout Auction API With Go Fiber](https://github.com/kayprogrammer/bidout-auction-v7)
+* [Bidout Auction API With Sanic](https://github.com/kayprogrammer/bidout-auction-v2)
+* [Bidout Auction API With Litestar](https://github.com/kayprogrammer/bidout-auction-v3)
+* [Bidout Auction API With Django Rest Framework](https://github.com/kayprogrammer/bidout-auction-v4)
+* [Bidout Auction API With Django Ninja](https://github.com/kayprogrammer/bidout-auction-v5)
+* [Bidout Auction API With FastAPI](https://github.com/kayprogrammer/bidout-auction-v6)
+* [Bidout Auction API With Go Fiber](https://github.com/kayprogrammer/bidout-auction-v7)
 
 
 
-![alt text](https://github.com/kayprogrammer/bidout-auction-react2/blob/main/display/logo.webp?raw=true)
+![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/logo.webp?raw=true)
 
 
 #### React Docs: [Documentation](https://legacy.reactjs.org/docs/getting-started.html)
@@ -22,7 +22,7 @@
 
 * Download this repo or run: 
 ```bash
-    $ git clone git@github.com:kayprogrammer/bidout-auction-react2.git
+    $ git clone git@github.com:kayprogrammer/bidout-auction-react.git
 ```
 
 #### In the root directory:
@@ -40,8 +40,8 @@
 #### With Docker
 - Docker Direct
 ```bash
-    $ docker build -t bidout-auction-react2 .
-    $ docker run -it -p 3000:3000 bidout-auction-react2
+    $ docker build -t bidout-auction-react .
+    $ docker run -it -p 3000:3000 bidout-auction-react
 ```
 - Docker With Makefile
 ```bash
@@ -49,7 +49,7 @@
     $ make up 
 ```
 
-## Live Urls
-#### React Application (Live): [Bidout Auction 2](https://bidout2.netlify.app) 
-#### API Docs (Live): [Documentation](https://bidout-litestar-api.cleverapps.io) 
+<!-- ## Live Urls -->
+<!-- #### React Application (Live): [Bidout Auction 2](https://bidout.netlify.app)  -->
+<!-- #### API Docs (Live): [Documentation](https://bidout-litestar-api.cleverapps.io)  -->
 ![alt text](https://github.com/kayprogrammer/bidout-auction-react/blob/main/display/display.png?raw=true)
