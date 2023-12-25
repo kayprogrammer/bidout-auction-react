@@ -152,8 +152,8 @@ const UserDashboard = () => {
                                     <Tbody>
                                         {listings.map((listing, i) => (
                                             <Tr key={i}>
-                                                <Td>{i + 1}</Td>
-                                                <Td>{listing.name}</Td>
+                                                <Td><Link style={{color:"blue"}} to={`/listings/${listing.slug}`}>{i + 1}</Link></Td>
+                                                <Td><Link style={{color:"blue"}} to={`/listings/${listing.slug}`}>{listing.name}</Link></Td>
                                                 <Td>${parseInteger(listing.price)}</Td>
                                                 <Td onClick={(event) => handleUpdateStatus(event, listing.slug, listing.time_left_seconds)} role='button' color={listing.active ? 'blue' : 'red'}>{listing.active ? 'Active' : 'Closed'}</Td>
                                                 <Td color='blue'><Link to={`/dashboard/listings/${listing.slug}/bids`}>{listing.bids_count}</Link></Td>
