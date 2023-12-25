@@ -149,7 +149,10 @@ export const authSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 var userDict = action.payload.data
-                userDict['id'] = jwt_decode(action.payload.data.access)['user_id'] 
+                var jwt_data = jwt_decode(action.payload.data.access)
+                if (jwt_data?.user_id) userDict['id'] = jwt_data['user_id'] 
+                if (jwt_data?.userId) userDict['id'] = jwt_data['userId'] 
+
                 state.user = userDict;
             })
             .addCase(login.rejected, (state, action) => {
